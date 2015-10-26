@@ -5,7 +5,7 @@ define(["jquery",
 	var app = {
 		root:"/",
 		URL:"/",
-		API:"/api",
+		API:"",
 		showAlert: function(title, text, klass) {
             $("#header-alert").removeClass("alert-danger alert-warning alert-success alert-info");
             $("#header-alert").addClass(klass);

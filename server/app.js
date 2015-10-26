@@ -11,6 +11,9 @@ var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
 
+var mysql = require('mysql'), // node-mysql module
+	myConnection = require('express-myconnection');// express-myconnection module
+
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
 mongoose.connection.on('error', function(err) {
@@ -24,6 +27,9 @@ if (config.seedDB) {
 
 // Setup server
 var app = express();
+
+app.use( myConnection(mysql, config.dbOptions, 'pool') );
+
 var server = require('http').createServer(app);
 var socketio = require('socket.io')(server, {
 	serveClient: config.env !== 'production',

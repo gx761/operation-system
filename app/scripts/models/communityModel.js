@@ -1,22 +1,18 @@
 /*global define*/
 
 define([
-    "app",
-], function (app) {
+    'underscore',
+    'backbone'
+], function (_, Backbone) {
     'use strict';
 
-    var UserModel = Backbone.Model.extend({
-        url: app.API+"/api/users/me",
+    var CommunityModel = Backbone.Model.extend({
+        url: '',
 
-        idAttribute:"_id",
         initialize: function() {
         },
 
         defaults: {
-            _id:0,
-            role:'',
-            name:'',
-            email:''
         },
 
         validate: function(attrs, options) {
@@ -27,5 +23,5 @@ define([
         }
     });
 
-    return UserModel;
+    return CommunityModel;
 });

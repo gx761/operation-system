@@ -13,7 +13,8 @@ var mountFolder = function (connect, dir) {
 // 'test/spec/**/*.js'
 // templateFramework: 'lodash'
 
-module.exports = function (grunt) {
+module.exports=function(grunt){
+
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load all grunt tasks
@@ -32,9 +33,9 @@ module.exports = function (grunt) {
                 nospawn: true,
                 livereload: LIVERELOAD_PORT
             },
-            sass: {
+            compass: {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['sass:server']
+                tasks: ['compass:server']
             },
             livereload: {
                 options: {
@@ -51,15 +52,39 @@ module.exports = function (grunt) {
             },
             jst: {
                 files: [
-                    '<%= yeoman.app %>/scripts/templates/*.ejs'
+                    '<%= yeoman.app %>/scripts/templates/{,*/}/*.ejs'
                 ],
                 tasks: ['jst']
+            },
+            express: {
+                files:  [ 'server/**/*.js' ],
+                tasks:  [ 'express:dev' ],
+                options: {
+                    spawn: false
+                }
             },
             test: {
                 files: ['<%= yeoman.app %>/scripts/{,*/}*.js', 'test/spec/**/*.js'],
                 tasks: ['test:true']
             }
         },
+        express: {
+            options: {
+                port: process.env.PORT || 9000
+            },
+            dev: {
+                options: {
+                    script: 'server/app.js',
+                    debug: true
+                }
+            },
+            prod: {
+                options: {
+                    script: 'dist/server/app.js'
+                }
+            }
+        },
+
         connect: {
             options: {
                 port: grunt.option('port') || SERVER_PORT,
@@ -132,30 +157,33 @@ module.exports = function (grunt) {
                 }
             }
         },
-        sass: {
-          options: {
-            sourceMap: true,
-            includePaths: ['app/bower_components']
+        compass: {
+            options: {
+                sassDir: '<%= yeoman.app %>/styles',
+                cssDir: '.tmp/styles',
+                imagesDir: '<%= yeoman.app %>/images',
+                javascriptsDir: '<%= yeoman.app %>/scripts',
+                fontsDir: '<%= yeoman.app %>/styles/fonts',
+                generatedImagesDir: '.tmp/images/generated',
+                importPath: 'app/bower_components',
+                httpImagesPath: '../images',
+                httpGeneratedImagesPath: '../images/generated',
+                httpFontsPath: 'fonts',
+                relativeAssets: false,
+                assetCacheBuster: false
             },
-          dist: {
-            files: [{
-              expand: true,
-              cwd: '<%= yeoman.app %>/styles',
-              src: ['*.{scss,sass}'],
-              dest: '.tmp/styles',
-              ext: '.css'
-            }]
-          },
-          server: {
-            files: [{
-              expand: true,
-              cwd: '<%= yeoman.app %>/styles',
-              src: ['*.{scss,sass}'],
-              dest: '.tmp/styles',
-              ext: '.css'
-            }]
-          }
+            dist: {
+                options: {
+                    generatedImagesDir: '<%= yeoman.dist %>/images/generated'
+                }
+            },
+            server: {
+                options: {
+                    debugInfo: true
+                }
+            }
         },
+
         requirejs: {
             dist: {
                 // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
@@ -217,14 +245,14 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     /*removeCommentsFromCDATA: true,
-                    // https://github.com/yeoman/grunt-usemin/issues/44
-                    //collapseWhitespace: true,
-                    collapseBooleanAttributes: true,
-                    removeAttributeQuotes: true,
-                    removeRedundantAttributes: true,
-                    useShortDoctype: true,
-                    removeEmptyAttributes: true,
-                    removeOptionalTags: true*/
+                     // https://github.com/yeoman/grunt-usemin/issues/44
+                     //collapseWhitespace: true,
+                     collapseBooleanAttributes: true,
+                     removeAttributeQuotes: true,
+                     removeRedundantAttributes: true,
+                     useShortDoctype: true,
+                     removeEmptyAttributes: true,
+                     removeOptionalTags: true*/
                 },
                 files: [{
                     expand: true,
@@ -264,7 +292,7 @@ module.exports = function (grunt) {
             },
             compile: {
                 files: {
-                    '.tmp/scripts/templates.js': ['<%= yeoman.app %>/scripts/templates/*.ejs']
+                    '.tmp/scripts/templates.js': ['<%= yeoman.app %>/scripts/templates/{,*/}*.ejs']
                 }
             }
         },
@@ -303,8 +331,8 @@ module.exports = function (grunt) {
                 'clean:server',
                 'createDefaultTemplate',
                 'jst',
-                'sass:server',
-       //         'connect:test',
+                'compass:server',
+                //         'connect:test',
                 'open:test',
                 'watch'
             ]);
@@ -314,8 +342,9 @@ module.exports = function (grunt) {
             'clean:server',
             'createDefaultTemplate',
             'jst',
-            'sass:server',
-       //     'connect:livereload',
+            'compass:server',
+      //      'connect:livereload',
+            'express:dev',
             'open:server',
             'watch'
         ]);
@@ -324,13 +353,13 @@ module.exports = function (grunt) {
     grunt.registerTask('test', function (isConnected) {
         isConnected = Boolean(isConnected);
         var testTasks = [
-                'clean:server',
-                'createDefaultTemplate',
-                'jst',
-                'sass',
-                'connect:test',
-                'mocha',
-            ];
+            'clean:server',
+            'createDefaultTemplate',
+            'jst',
+            'compass',
+            'connect:test',
+            'mocha',
+        ];
 
         if(!isConnected) {
             return grunt.task.run(testTasks);
@@ -345,7 +374,7 @@ module.exports = function (grunt) {
         'clean:dist',
         'createDefaultTemplate',
         'jst',
-        'sass:dist',
+        'compass:dist',
         'useminPrepare',
         'requirejs',
         'imagemin',
@@ -363,4 +392,7 @@ module.exports = function (grunt) {
         'test',
         'build'
     ]);
+
+
+
 };

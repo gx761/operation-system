@@ -2,13 +2,14 @@
 
 define([
     'app',
-    'models/UserModel'
-], function(app, UserModel) {
+    'models/UserModel',
+    'js-cookie'
+], function(app, UserModel,Cookies) {
     'use strict';
 
     var SessionModel = Backbone.Model.extend({
         url: function() {
-            return app.API + 'auth';
+            return app.API + 'auth/local';
         },
 
         initialize: function() {
@@ -17,11 +18,24 @@ define([
 
         defaults: {
             logged_in: false,
-            user_id: ''
+            token: ''
         },
         //use user data to update the session model data
-        updateSessionUser: function(userData) {
-            this.user.set(_pick(userData, _.keys(this.user.defaults)))
+        updateSessionUser: function(token) {
+            this.user.fetch({
+                success:function(model,res){
+                    console.log(model);
+                }
+            });
+
+/*
+            this.user.set(_.pick(token, _.keys(this.user.defaults)))
+*/
+        },
+        setTokenInHeader:function(token){
+            Backbone.$.ajaxSetup({
+                headers: { 'Authorization': 'Bearer '+token }
+            });
         },
 
         //check the session and call the callback
@@ -51,7 +65,7 @@ define([
                         });
                         if ('error' in callback)
                             callback.error(mod, res);
-                    };
+                    }
                 })
                 .complete(function() {
                     if ('complete' in callback)
@@ -63,13 +77,14 @@ define([
         postAuth: function(options, callback, args) {
             var self = this;
             var postData = _.omit(options, 'method');
-            if (DEBUG) console.log(postData);
-
+            console.log(options);
+            console.log(arguments);
             $.ajax({
                 url: this.url() + '/' + options.method,
                 contentType: 'application/json',
                 dataType: 'json',
                 type: 'POST',
+                data: JSON.stringify(postData),
                 beforeSend: function(xhr) {
                     var token = $('meta[name="csrf-token"]').attr('content');
                     if (token)
@@ -77,24 +92,25 @@ define([
                 },
                 success: function(res) {
                     if (!res.error) {
-                        if (_indexOf(['login', 'signup'], options.method)) {
-                            self.updateSessionUser(res.user || {});
+                        if (_.indexOf(['login', 'signup'], options.method)!==-1) {
+                            console.log("arrived at here0");
                             self.set({
-                                user_id: res.user.id,
+                                token: res.token,
                                 logged_in: true
                             });
+                            self.setTokenInHeader(res.token || {});
+                            self.updateSessionUser(res.token || {});
                         } else {
                             self.set({
                                 logged_in: false
                             });
                         }
-
-                        if (call && 'success' in callback) callback.success(res);
+                        if (callback && 'success' in callback) callback.success(res);
                     } else {
                         if (callback && 'error' in callback) callback.error(res);
                     }
                 },
-                error: function(mod, res) {
+                error: function(res) {
                     if (callback && 'error' in callback) callback.error(res);
                 }
             }).complete(function() {
@@ -103,14 +119,15 @@ define([
 
         },
         login: function(options, callback, args) {
+
             this.postAuth(_.extend(options, {
                 method: 'login'
-            }, callback));
+            }), callback);
         },
         logout: function(options, callback, args) {
             this.postAuth(_.extend(options, {
                 method: 'logout'
-            }, callback));
+            }), callback);
         },
         signup: function(options, callback, args) {
             this.postAuth(_.extend(options, {

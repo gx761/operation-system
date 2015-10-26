@@ -2,8 +2,8 @@
 	<div class="row clearfix" id="login-form-container">
 		<!--<img class="displayed" src="/assets/img/logo.png" alt="logo"/>-->
 
-        <div class="col-md-5 well well-lg text-center">
-            <h1>Login</h1>
+        <div class="col-md-12 well well-lg text-center">
+            <h1>用户登录</h1>
             <div class="height:50px;">
                 <ul id="login-errors" class="parsley-error-list"></ul>
             </div>
@@ -12,15 +12,15 @@
                 <fieldset>
                     <div class="control-group">
                         <div class="controls">
-                            <input type="text" id="login-username-input" name="username" placeholder="Username" value="<%= user.username || '' %>"
-                                data-required="true" data-notblank="true">
+                            <input type="text" id="login-email-input" name="email" placeholder="Email" value="<%= user.email || '' %>"
+                                   data-parsley-required="true" >
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="control-group mb20">
                         <div class="controls">
-                            <input class="input-medium" type="password" id="login-password-input" placeholder="Password" name="user_password" 
-                                value="" data-required="true" data-notblank="true" data-rangelength="[5,25]">
+                            <input class="input-medium" type="password" id="login-password-input" placeholder="Password" name="password" 
+                                value="" data-parsley-required="true"  data-parsley-length="[5,25]">
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
             </form>
         </div>
 
-        <div class="col-md-2"></div>
+<!--         <div class="col-md-2"></div>
 
         <div class="col-md-5 well well-lg text-center">
             <h1>Signup</h1>
@@ -41,7 +41,7 @@
                 <fieldset>
                     <div class="control-group">
                         <div class="controls">
-                            <input type="text" id="signup-username-input" name="username" placeholder="Username" value="<%= user.username || '' %>"
+                            <input type="text" id="signup-email-input" name="email" placeholder="Username" value="<%= user.email || '' %>"
                                 data-required="true" data-notblank="true">
                             <span class="help-block"></span>
                         </div>
@@ -64,7 +64,7 @@
                     
                 </fieldset>
             </form>
-        </div>
+        </div> -->
 
 	</div>
 </div>

@@ -3,9 +3,9 @@
 define([
 	'jquery',
 	'backbone',
-	'views/header',
-	'views/login'
-], function($, Backbone) {
+	'views/headerView',
+	'views/loginView'
+], function($, Backbone,HeaderView,LoginView) {
 	'use strict';
 
 	var LoginRouter = Backbone.Router.extend({
@@ -13,10 +13,12 @@ define([
 			"login": "login"
 		},
 		login: function() {
-			this.show(new loginView({}));
+
+			this.show(new LoginView({}));
 
 		},
 		show: function(view, options) {
+			
 			if (!this.headerView) {
 				this.headerView = new HeaderView({});
 				this.headerView.setElement($(".header")).render();

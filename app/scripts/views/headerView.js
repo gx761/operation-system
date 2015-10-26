@@ -24,15 +24,13 @@ define([
         },
 
         initialize: function() {
-            app.session.on('change:logged_in',this.onLoginStatusChange)
+            _.bindAll(this);
+            app.session.user.on('change:email',this.onLoginStatusChange)
         },
 
-        render: function() {
-            this.$el.html(this.template(this.model.toJSON()));
-        },
         onLoginStatusChange: function(event) {
             this.render();
-            if (app.session.get("logged_in")) app.showAlert("Success!", "Logged in as " + app.session.user.get("username"), "alert-success");
+            if (app.session.get("logged_in")) app.showAlert("Success!", "Logged in as " + app.session.user.get("email"), "alert-success");
             else app.showAlert("See ya!", "Logged out successfully", "alert-success");
 
         },
@@ -45,7 +43,7 @@ define([
             app.session.removeAccount({});
         },
         render:function(){
-            if(DEBUG) console.log("RENDER::",app.session.user.toJSON(),app.session.toJSON());
+            // if(DEBUG) console.log("RENDER::",app.session.user.toJSON(),app.session.toJSON());
             this.$el.html(this.template({
                 logged_in:app.session.get("logged_in"),
                 user:app.session.user.toJSON()

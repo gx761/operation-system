@@ -1,22 +1,23 @@
 /*global define*/
 
 define([
-    "app",
-], function (app) {
+    'underscore',
+    'backbone'
+], function (_, Backbone) {
     'use strict';
 
-    var UserModel = Backbone.Model.extend({
-        url: app.API+"/api/users/me",
+    var CountryModel = Backbone.Model.extend({
+        url: '',
 
-        idAttribute:"_id",
+        idAttribute:"areacode",
+
         initialize: function() {
         },
 
         defaults: {
-            _id:0,
-            role:'',
+            areacode:0,
             name:'',
-            email:''
+            level:''
         },
 
         validate: function(attrs, options) {
@@ -27,5 +28,5 @@ define([
         }
     });
 
-    return UserModel;
+    return CountryModel;
 });
