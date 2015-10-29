@@ -12,10 +12,14 @@ define([
         initialize: function() {
         },
 
-        idAttribute:"communitynamecode",
+        idAttribute:'communitynamecode',
         defaults: {
             communitynamecode:'',
             communityname:'',
+            description:'',
+            citycode:'',
+            areacode:'',
+            type:'',
         },
 
         validate: function(attrs, options) {

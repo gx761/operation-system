@@ -9,13 +9,13 @@ define([
     'use strict';
 
     var CommunityView = Backbone.View.extend({
+
         template: JST['app/scripts/templates/communitySearch/community.ejs'],
 
-        el :"#community-name-input",
-
+        el :'#community-name-input',
 
         events: {
-            "change": "changeSelected"
+            'change': 'changeSelected'
         },
 
         initialize: function () {
@@ -23,15 +23,18 @@ define([
             _.bindAll(this);
             this.render();
         },
+
         changeSelected:function(){
             this.setName();
         },
-        render: function () {
 
+        render: function () {
             this.$el.html(this.template({}));
             return this;
         }
+        
     });
 
     return CommunityView;
+
 });

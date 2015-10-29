@@ -16,10 +16,6 @@ var _ = require('lodash');
 var Community = require('./community.model');
 var mysql = require('mysql');
 
-function mysqlLog(sql,inserts){
-    var sqlString = mysql.format(sql, inserts);
-    console.log(sqlString);
-}
 
 function mysqlLog(sql,inserts){
     var sqlString = mysql.format(sql, inserts);
@@ -71,12 +67,32 @@ exports.getCommunities = function(req,res){
     req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
 
-
         if(data.districtId&&_.isNumber(parseInt(data.districtId))){
             connection.query('select * from dic_community where ? and communityname like ?',[{"areacode":parseInt(data.districtId)},'%'+data.name+'%'], function(err, results) {
                 if(err) { return handleError(res, err); }
                 return res.status(200).json(results);
             });
+        }
+        else if(data.cityId&& _.isNumber(parseInt(data.cityId))){
+            connection.query('select * from dic_community where ? and communityname like ?',[{"citycode":parseInt(data.cityId)},'%'+data.name+'%'], function(err, results) {
+                if(err) { return handleError(res, err); }
+                return res.status(200).json(results);
+            })
+        }
+        else if(data.provinceId&& _.isNumber(parseInt(data.provinceId))){
+            connection.query('select * from dic_community inner join dic_areacode on dic_community.citycode=dic_areacode.areacode where ? and communityname like ?',[{"dic_areacode.hihercode":parseInt(data.provinceId)},'%'+data.name+'%'], function(err, results) {
+                if(err) { return handleError(res, err); }
+                return res.status(200).json(results);
+            })
+        }
+        else if(data.countryId&& _.isNumber(parseInt(data.countryId))){
+            connection.query('select * from dic_community inner join dic_areacode as d1 on dic_community.citycode=d1.areacode inner join dic_areacode as d2 on d1.hihercode=d2.areacode where ? and communityname like ?',[{"d2.hihercode":parseInt(data.countryId)},'%'+data.name+'%'], function(err, results) {
+                if(err) { return handleError(res, err); }
+                return res.status(200).json(results);
+            })
+        }
+        else{
+            return res.status(500).send();
         }
 
 

@@ -10,6 +10,6 @@ define([
     var CityCollection = Backbone.Collection.extend({
         model: CityModel,
     });
-
+    
     return CityCollection;
 });

@@ -8,15 +8,17 @@ define([
     'views/communitySearch/locationView'
 ], function ($, _, Backbone, JST, LocationView) {
 
+    'use strict';
+
     var LocationsView = Backbone.View.extend({
 
         events: {
-            "change": "changeSelected"
+            'change': 'changeSelected'
         },
         initialize: function (options) {
         //    this.el = options.el;
              _.bindAll(this);
-            this.collection.on("reset", this.addAll);
+            this.collection.on('reset', this.addAll);
         },
         addOne: function (location) {
             var locationView = new LocationView({model: location});
@@ -38,10 +40,19 @@ define([
                 this.setSelectedId(this.$el.val());
             }
             else{
-                if(this.childrenView)
-                this.resetChildrenView(this.childrenView,0);
+                if(this.childrenView){
+                   this.resetChildrenView(this.childrenView,0); 
+                }
+                
+                if(this.parentView){
+                    this.parentView.updateSearchResults();
+                }
+                
             }
         },
+
+    
+
         populateForm:function(url){
             this.childrenView.collection.url=url;
             this.childrenView.collection.fetch({reset:true});
@@ -61,7 +72,7 @@ define([
 
             childrenView.collection.reset();
             if(childrenView.childrenView){
-                arguments.callee(childrenView.childrenView);
+               this.resetChildrenView(childrenView.childrenView);
             }
         }
 

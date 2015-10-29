@@ -63,10 +63,12 @@ module.exports=function(grunt){
                     spawn: false
                 }
             },
-            test: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.js', 'test/spec/**/*.js'],
+/*            test: {
+                files: ['<%= yeoman.app %>/scripts/{,*!/}*.js', 'test/spec/!**!/!*.js'],
                 tasks: ['test:true']
-            }
+            }*/
+
+            
         },
         express: {
             options: {
