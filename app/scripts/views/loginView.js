@@ -44,6 +44,10 @@ define([
                 }, {
                     success: function (res) {
                        console.log("SUCCESS",res);
+
+                       app.router.navigate("/", {trigger: true});
+
+
                     },
                     error: function (err) {
                         console.log("ERROR", err);

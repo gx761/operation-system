@@ -5,8 +5,9 @@ define([
     'backbone',
     'views/headerView',
     'views/indexView',
-    '../views/communitySearch/communitySearchView'
-], function ($, Backbone, HeaderView, IndexView, communitySearchView) {
+    '../views/communitySearch/communitySearchView',
+    'app'
+], function ($, Backbone, HeaderView, IndexView, CommunitySearchView,app) {
     'use strict';
 
     var IndexRouter = Backbone.Router.extend({
@@ -14,19 +15,28 @@ define([
             '': 'index'
         },
         index: function () {
+
+
+           if(app.session.get('logged_in')===true){
+            $('#content').empty();
             this.showHeader();
-            this.show(new IndexView({}));
             this.showSearchBar();
+            this.show(new IndexView({}));
+           }
+
+            
+            
         },
         showHeader: function () {
             if (!this.headerView) {
                 this.headerView = new HeaderView({});
-                this.headerView.setElement($(".header")).render();
+                this.headerView.setElement($("#header")).render();
             }
         },
         showSearchBar: function () {
+
             if (!this.communitySearchView) {
-                this.communitySearchView = new communitySearchView({}).setElement("#content").render();
+                this.communitySearchView = new CommunitySearchView({}).setElement('#content').render();
             }
         },
 

@@ -2,30 +2,60 @@
 
 define([
     'underscore',
-    'backbone'
-], function (_, Backbone) {
+    'backbone',
+   
+], function(_, Backbone) {
     'use strict';
 
     var CommunityModel = Backbone.Model.extend({
-        url: '',
+        url: '/api/communities',
 
-        initialize: function() {
-        },
+        initialize: function() {},
 
-        idAttribute:'communitynamecode',
+        idAttribute: 'communitycode',
         defaults: {
-            communitynamecode:'',
-            communityname:'',
-            description:'',
-            citycode:'',
-            areacode:'',
-            type:'',
+            communitycode: null,
+            communityname: '',
+            description: '',
+            citycode: '',
+            areacode: '',
+            type: '',
+            gpslat: '',
+            gpslng: ''
         },
 
-        validate: function(attrs, options) {
+        validation: {
+           
+            communityname: {
+                required: true
+            },
+            description: {
+                required: false,
+                length: 300
+            },
+            citycode: {
+                range: [0, 532926]
+            },
+            areacode: {
+                range: [0, 532926]
+            },
+            type:{
+                required:false
+            },
+            gpslat:{
+                required: false
+            },
+            gpslng:{
+                required: false
+            },
+            // someAttribute: function(value) {
+            //     if (value !== 'somevalue') {
+            //         return 'Error message';
+            //     }
+            // }
         },
 
-        parse: function(response, options)  {
+        parse: function(response, options) {
             return response;
         }
     });

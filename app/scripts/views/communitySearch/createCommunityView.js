@@ -10,22 +10,29 @@ define([
     'collections/communitySearch/provinceCollection',
     'collections/communitySearch/districtCollection',
     'views/communitySearch/locationsView',
-    'views/modalDialogView'
-], function($, _, Backbone, JST, CountryCollection, CityCollection, ProvinceCollection, DistrictCollection,LocationsView) {
+    'BackboneValidation',
+    'views/modalDialogView',
+
+], function($, _, Backbone, JST, CountryCollection, CityCollection, ProvinceCollection, DistrictCollection, LocationsView) {
     'use strict';
 
     var CreateCommunityView = Backbone.ModalView.extend({
         template: JST['app/scripts/templates/communitySearch/createCommunity.ejs'],
 
-
+        events: {
+            'click #cancel_create': 'cancelCreate',
+            'click #confirm_create': 'confirmCreate'
+        },
 
         initialize: function() {
             //        this.listenTo(this.model, 'change', this.render);
+           _.bind(this.hideModal,this);
         },
 
         render: function() {
-            this.$el.html(this.template(this.model.toJSON()));
 
+            this.$el.html(this.template(this.model.toJSON()));
+            Backbone.Validation.bind(this);
             return this;
         },
         populate: function() {
@@ -52,9 +59,8 @@ define([
                 }
             });
 
-             var DistrictsView = LocationsView.extend({
-                setSelectedId: function() {
-                }
+            var DistrictsView = LocationsView.extend({
+                setSelectedId: function() {}
             });
 
 
@@ -84,6 +90,37 @@ define([
                 reset: true,
             });
 
+        },
+        cancelCreate: function(e) {
+            e.preventDefault();
+            this.hideModal();
+        },
+        confirmCreate: function(e) {
+            e.preventDefault();
+            var instance = this.$el.find('#create_community_form');
+            instance.parsley().validate();
+            if (instance.parsley().isValid()) {
+                this.model.set('communityname',$('#create_community_name').val());
+                this.model.set('citycode',$('#new_city_selector').val());
+                this.model.set('areacode',$('#new_district_selector').val());
+                this.model.set('gpslng',$('#gpslng').val());
+                this.model.set('gpslat',$('#gpslat').val());
+
+                this.model.validate();
+                var self=this;
+
+                if(this.model.isValid()){
+                    this.model.save(null,{
+                        success:function(model, response, options){
+                            alert('小区添加成功');
+                            self.hideModal();
+                        }
+                    });
+                }
+
+                
+                
+            }
         }
 
 

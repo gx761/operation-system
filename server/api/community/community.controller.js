@@ -15,13 +15,15 @@
 var _ = require('lodash');
 var Community = require('./community.model');
 var mysql = require('mysql');
-
+var moment =require('moment');
 
 function mysqlLog(sql,inserts){
     var sqlString = mysql.format(sql, inserts);
     console.log(sqlString);
 }
-
+function handleError(res, err) {
+    return res.status(500).send(err);
+}
 exports.getCountries = function(req,res){
     req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
@@ -36,7 +38,7 @@ exports.getCountries = function(req,res){
 exports.getProvinces = function(req,res){
     req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
-        connection.query('select areacode,name,level from dic_areacode where level=1 and ?',{"hihercode":req.params.countryId}, function(err, results) {
+        connection.query('select areacode,name,level from dic_areacode where level=1 and ?',{'hihercode':req.params.countryId}, function(err, results) {
             if(err) { return handleError(res, err); }
             return res.status(200).json(results);
         });
@@ -46,7 +48,7 @@ exports.getProvinces = function(req,res){
 exports.getCities = function(req,res){
     req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
-        connection.query('select areacode,name,level from dic_areacode where level=2 and ?',{"hihercode":req.params.provinceId}, function(err, results) {
+        connection.query('select areacode,name,level from dic_areacode where level=2 and ?',{'hihercode':req.params.provinceId}, function(err, results) {
             if(err) { return handleError(res, err); }
             return res.status(200).json(results);
         });
@@ -56,7 +58,7 @@ exports.getCities = function(req,res){
 exports.getDistricts = function(req,res){
     req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
-        connection.query('select areacode,name,level from dic_areacode where level=3 and ?',{"hihercode":req.params.cityId}, function(err, results) {
+        connection.query('select areacode,name,level from dic_areacode where level=3 and ?',{'hihercode':req.params.cityId}, function(err, results) {
             if(err) { return handleError(res, err); }
             return res.status(200).json(results);
         });
@@ -68,28 +70,28 @@ exports.getCommunities = function(req,res){
         if(err) { return handleError(res, err); }
 
         if(data.districtId&&_.isNumber(parseInt(data.districtId))){
-            connection.query('select * from dic_community where ? and communityname like ?',[{"areacode":parseInt(data.districtId)},'%'+data.name+'%'], function(err, results) {
+            connection.query('select * from dic_community where ? and communityname like ?',[{'areacode':parseInt(data.districtId)},'%'+data.name+'%'], function(err, results) {
                 if(err) { return handleError(res, err); }
                 return res.status(200).json(results);
             });
         }
         else if(data.cityId&& _.isNumber(parseInt(data.cityId))){
-            connection.query('select * from dic_community where ? and communityname like ?',[{"citycode":parseInt(data.cityId)},'%'+data.name+'%'], function(err, results) {
+            connection.query('select * from dic_community where ? and communityname like ?',[{'citycode':parseInt(data.cityId)},'%'+data.name+'%'], function(err, results) {
                 if(err) { return handleError(res, err); }
                 return res.status(200).json(results);
-            })
+            });
         }
         else if(data.provinceId&& _.isNumber(parseInt(data.provinceId))){
-            connection.query('select * from dic_community inner join dic_areacode on dic_community.citycode=dic_areacode.areacode where ? and communityname like ?',[{"dic_areacode.hihercode":parseInt(data.provinceId)},'%'+data.name+'%'], function(err, results) {
+            connection.query('select * from dic_community inner join dic_areacode on dic_community.citycode=dic_areacode.areacode where ? and communityname like ?',[{'dic_areacode.hihercode':parseInt(data.provinceId)},'%'+data.name+'%'], function(err, results) {
                 if(err) { return handleError(res, err); }
                 return res.status(200).json(results);
-            })
+            });
         }
         else if(data.countryId&& _.isNumber(parseInt(data.countryId))){
-            connection.query('select * from dic_community inner join dic_areacode as d1 on dic_community.citycode=d1.areacode inner join dic_areacode as d2 on d1.hihercode=d2.areacode where ? and communityname like ?',[{"d2.hihercode":parseInt(data.countryId)},'%'+data.name+'%'], function(err, results) {
+            connection.query('select * from dic_community inner join dic_areacode as d1 on dic_community.citycode=d1.areacode inner join dic_areacode as d2 on d1.hihercode=d2.areacode where ? and communityname like ?',[{'d2.hihercode':parseInt(data.countryId)},'%'+data.name+'%'], function(err, results) {
                 if(err) { return handleError(res, err); }
                 return res.status(200).json(results);
-            })
+            });
         }
         else{
             return res.status(500).send();
@@ -100,7 +102,39 @@ exports.getCommunities = function(req,res){
 
 };
 
+// Creates a new community in the DB.
+exports.create = function(req, res) {
 
+    console.log(req.user);
+    if(req.body.communitycode){
+        delete req.body.communitycode;
+    }
+
+
+    var postData = {
+        communityname:req.body.communityname,
+        citycode:req.body.citycode,
+        areacode:req.body.areacode,
+        createoperator: req.user._id,
+        modifyoperator: req.user._id,
+        createtime:moment().format('YYYY-MM-DD HH:mm:ss'),
+        modifytime:moment().format('YYYY-MM-DD HH:mm:ss'),
+        gpslat:req.body.gpslat,
+        gpslng:req.body.gpslng
+    };
+
+
+
+
+    mysqlLog('insert into dic_community set ?',postData);
+      req.getConnection(function(err, connection) {
+        if(err) { return handleError(res, err); }
+        connection.query('insert into dic_community set ?',postData, function(err, results) {
+            if(err) { return handleError(res, err); }
+            return res.status(201).json(results);
+        });
+    });
+};
 
 
 // Get list of communitys
@@ -120,13 +154,7 @@ exports.show = function(req, res) {
     });
 };
 
-// Creates a new community in the DB.
-exports.create = function(req, res) {
-    Community.create(req.body, function(err, community) {
-        if(err) { return handleError(res, err); }
-        return res.status(201).json(community);
-    });
-};
+
 
 // Updates an existing community in the DB.
 exports.update = function(req, res) {
@@ -153,7 +181,3 @@ exports.destroy = function(req, res) {
         });
     });
 };
-
-function handleError(res, err) {
-    return res.status(500).send(err);
-}

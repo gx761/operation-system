@@ -4,7 +4,7 @@ define([
     'app',
     'models/UserModel',
     'js-cookie'
-], function(app, UserModel,Cookies) {
+], function(app, UserModel, Cookies) {
     'use strict';
 
     var SessionModel = Backbone.Model.extend({
@@ -23,25 +23,63 @@ define([
         //use user data to update the session model data
         updateSessionUser: function(token) {
             this.user.fetch({
-                success:function(model,res){
+                success: function(model, res) {
                     console.log(model);
                 }
             });
 
-/*
-            this.user.set(_.pick(token, _.keys(this.user.defaults)))
-*/
+            /*
+                        this.user.set(_.pick(token, _.keys(this.user.defaults)))
+            */
         },
-        setTokenInHeader:function(token){
+        setTokenInHeader: function(token) {
             Backbone.$.ajaxSetup({
-                headers: { 'Authorization': 'Bearer '+token }
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
             });
         },
+        setTokenCookie: function(token) {
+            Cookies.set('token', token);
+        },
+
 
         //check the session and call the callback
 
         checkAuth: function(callback, args) {
-            var self = this;
+
+             var self = this;
+            if (Cookies.get('token')) {
+                this.setTokenInHeader(Cookies.get('token'));
+            }
+            this.user.fetch({
+                success: function(mod, res) {
+                    self.set({
+                        logged_in: true
+                    });
+                    if ('success' in callback) {
+                        callback.success(mod, res);
+                    }
+
+                },
+                error: function(mod, res) {
+                    self.set({
+                        logged_in: false
+                    });
+                    if ('error' in callback){
+                        callback.error(mod, res);
+                    }
+                }
+
+            }).complete(function() {
+                if ('complete' in callback) {
+                    callback.complete();
+                }
+            });
+
+
+
+        /*    var self = this;
             this.fetch({
                     success: function(mod, res) {
                         if (!res.error && res.user) {
@@ -71,7 +109,7 @@ define([
                     if ('complete' in callback)
                         callback.complete();
                 });
-
+*/
         },
 
         postAuth: function(options, callback, args) {
@@ -92,7 +130,7 @@ define([
                 },
                 success: function(res) {
                     if (!res.error) {
-                        if (_.indexOf(['login', 'signup'], options.method)!==-1) {
+                        if (_.indexOf(['login', 'signup'], options.method) !== -1) {
                             console.log("arrived at here0");
                             self.set({
                                 token: res.token,
@@ -100,6 +138,7 @@ define([
                             });
                             self.setTokenInHeader(res.token || {});
                             self.updateSessionUser(res.token || {});
+                            self.setTokenCookie(res.token || {});
                         } else {
                             self.set({
                                 logged_in: false
@@ -128,6 +167,7 @@ define([
             this.postAuth(_.extend(options, {
                 method: 'logout'
             }), callback);
+            Cookies.remove('token');
         },
         signup: function(options, callback, args) {
             this.postAuth(_.extend(options, {
