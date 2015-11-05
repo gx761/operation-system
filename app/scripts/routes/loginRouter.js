@@ -10,9 +10,10 @@ define([
 
 	var LoginRouter = Backbone.Router.extend({
 		routes: {
-			"login": "login"
+			'login': 'login'
 		},
 		login: function() {
+			console.log(456);
 
 			this.show(new LoginView({}));
 
@@ -21,7 +22,7 @@ define([
 			
 			if (!this.headerView) {
 				this.headerView = new HeaderView({});
-				this.headerView.setElement($(".header")).render();
+				this.headerView.setElement($('.header')).render();
 			}
 			// Close and unbind any existing page view
 			if (this.currentView && _.isFunction(this.currentView.close)) this.currentView.close();
@@ -36,7 +37,7 @@ define([
                         // If auth successful, render inside the page wrapper
                         $('#content').html( self.currentView.render().$el);
                     }, error: function(res){
-                        self.navigate("/", { trigger: true, replace: true });
+                        self.navigate('/', { trigger: true, replace: true });
                     }
                 });
 

@@ -10,7 +10,7 @@ define([
 
     var CommunityCollection = Backbone.Collection.extend({
         model: CommunityModel,
-        url: app.API + 'api/communities/getCommunities'
+        url: app.API + 'api/communities/'
     });
 
     return CommunityCollection;

@@ -11,13 +11,12 @@ var auth = require('../../auth/auth.service');
 
 
 router.get('/', controller.index);
-router.get('/countries', controller.getCountries);
-router.get('/:countryId/getProvinces', controller.getProvinces);
-router.get('/:provinceId/getCities', controller.getCities);
-router.get('/:cityId/getDistricts', controller.getDistricts);
-router.get('/getCommunities', controller.getCommunities);
-
 router.get('/:id', controller.show);
+router.get('/mcompany/:id', controller.showMcompanyInfo);
+router.get('/privateServices/:id', controller.showPrivateServices);
+router.get('/pubclicServices/:id', controller.showPublicServices);
+
+
 router.post('/', auth.hasRole('admin'),controller.create);
 router.put('/:id', controller.update);
 router.patch('/:id', controller.update);

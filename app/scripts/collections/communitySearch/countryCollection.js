@@ -10,7 +10,7 @@ define([
 
     var CountryCollection = Backbone.Collection.extend({
         model: CountryModel,
-        url: app.API + 'api/communities/countries',
+        url: app.API + 'api/ajax/countries',
     });
 
     return CountryCollection;

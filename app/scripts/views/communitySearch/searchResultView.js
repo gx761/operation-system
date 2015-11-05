@@ -24,7 +24,15 @@ define([
         },
 
         render: function () {
-            $(this.el).attr('rel',this.model.get('communitycode')).html(this.model.get('communityname'));
+
+            var inside=document.createElement('a');
+            inside.setAttribute('href','#community/'+this.model.get('communitycode'));
+            inside.textContent = this.model.get('communityname');
+
+            $(this.el).append(inside);
+
+
+         //   $(this.el).attr('rel',this.model.get('communitycode')).html(this.model.get('communityname'));
             return this;
         }
 

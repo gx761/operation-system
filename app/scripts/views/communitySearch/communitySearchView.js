@@ -60,21 +60,21 @@ define([
             this.communityCollection = new CommunityCollection({});
             var CountriesView = LocationsView.extend({
                 setSelectedId: function(countryId) {
-                    this.populateForm('api/communities/' + countryId + '/getProvinces');
+                    this.populateForm('api/ajax/' + countryId + '/getProvinces');
                     self.updateSearchResults();
                 }
             });
 
             var ProvincesView = LocationsView.extend({
                 setSelectedId: function(provinceId) {
-                    this.populateForm('api/communities/' + provinceId + '/getCities');
+                    this.populateForm('api/ajax/' + provinceId + '/getCities');
                     self.updateSearchResults();
                 }
             });
 
             var CitiesView = LocationsView.extend({
                 setSelectedId: function(cityId) {
-                    this.populateForm('api/communities/' + cityId + '/getDistricts');
+                    this.populateForm('api/ajax/' + cityId + '/getDistricts');
                     self.updateSearchResults();
                 }
             });
@@ -142,7 +142,7 @@ define([
 
 
         render: function() {
-            this.$el.append(this.template({}));
+            this.$el.html(this.template({}));
             this.populate();
             return this;
         }

@@ -19,9 +19,9 @@
     "globals": {
         "Test": true,
         "test": true,
-        "_": false,
-        "Backbone": false,
-        "JST": false,
+        "_": true,
+        "Backbone": true,
+        "JST": true,
         "beforeEach": false,
         "describe": false,
         "it": false,

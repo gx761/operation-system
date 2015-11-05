@@ -31,46 +31,71 @@ require([
     'app',
     'routes/loginRouter',
     'routes/indexRouter',
-    'models/SessionModel'
-], function(Backbone, app, LoginRouter, IndexRouter, SessionModel) {
+    'routes/communityRouter',
+    'models/SessionModel',
+
+], function(Backbone, app, LoginRouter, IndexRouter, CommunityRouter, SessionModel) {
     // Backbone.emulateHttp =true;
     app.session = new SessionModel({});
     app.router = new Backbone.Router();
+    var loginRouter = new LoginRouter({});
+    var indexRouter = new IndexRouter({});
+    var communityRouter = new CommunityRouter({});
+
 
 
     app.session.checkAuth({
 
-        // Start the backbone routing once we have captured a user's auth status
-        success: function(mod, res) {
+        // // Start the backbone routing once we have captured a user's auth status
+        // success: function(mod, res) {
+        //     // HTML5 pushState for URLs without hashbangs
+        //     /*    var hasPushstate = !!(window.history && history.pushState);
+        //         if(hasPushstate) Backbone.history.start({ pushState: true, root: '/' });
+        //         else Backbone.history.start();*/
+        //     // Backbone.history.start({
+        //     //     pushState: true,
+        //     //     root: '/'
+        //     // });
+
+        //     Backbone.history.start({
+        //         pushState: false,
+        //         root: '/'
+        //     });
+
+        // },
+        // error: function(mod, res) {
+
+        //     // Backbone.history.start({
+        //     //     pushState: true,
+        //     //     root: '/'
+        //     // });
+
+        //     //    window.location = '/login';
+
+        //     Backbone.history.start({
+        //         pushState: false,
+        //         root: '/'
+        //     });
+
+
+        //     app.router.navigate('login', {
+        //         trigger: true,
+        //         replace: true
+        //     });
+
+        // },
+        complete: function() {
+
             // HTML5 pushState for URLs without hashbangs
-            /*    var hasPushstate = !!(window.history && history.pushState);
-                if(hasPushstate) Backbone.history.start({ pushState: true, root: '/' });
-                else Backbone.history.start();*/
-            Backbone.history.start({
-                pushState: true,
+            var hasPushstate = !!(window.history && history.pushState);
+            if (hasPushstate) Backbone.history.start({
+                pushState: false,
                 root: '/'
             });
-        },
-        error: function(mod, res) {
+            else Backbone.history.start();
 
-            Backbone.history.start({
-                pushState: true,
-                root: '/'
-            });
-
-        //    window.location = '/login';
-         
-             app.router.navigate("/login", {
-                 trigger: true,
-                 replace: true
-             });
-         
         }
     });
-
-    var indexRouter = new IndexRouter({});
-    var loginRouter = new LoginRouter({});
-
 
 
 });
