@@ -5,8 +5,10 @@ define([
     'underscore',
     'backbone',
     'templates',
-    'views/communityDetails/privateServiceView'
-], function($, _, Backbone, JST, PrivateServiceView) {
+    'views/communityDetails/privateServiceView',
+    'views/communityDetails/createPrivateServiceView',
+    'models/communityDetails/privateServiceModel'
+], function($, _, Backbone, JST, PrivateServiceView,CreatePrivateServiceView,PrivateServiceModel) {
     'use strict';
 
     var PrivateServicesView = Backbone.View.extend({
@@ -18,7 +20,9 @@ define([
 
         className: '',
 
-        events: {},
+        events: {
+            'click .add_service': 'addService',
+        },
 
         initialize: function() {
             _.bindAll(this);
@@ -27,6 +31,15 @@ define([
             // this.collection.on("reset", this.addAll);
         },
 
+        addService:function(e){
+            e.preventDefault();
+            var createCommunityModel = new PrivateServiceModel({});
+            var view = new CreatePrivateServiceView({
+                model:createCommunityModel
+            });
+            view.render().showModal();
+
+        },
         addOne: function(privateService) {
 
             var privateServiceView = new PrivateServiceView({
@@ -41,9 +54,9 @@ define([
         },
         addAll: function() {
 
-            this.$el.append('<p>物业自营<span class="center-text">' + this.collection.length + '个</span></p>');
+            this.$el.append('<p>物业自营<span class="center-text">' + this.collection.length + '个</span></p><div class="row"><div class="col-xs-3"><div class="add_service"><div class="add-service-inner"><div class="synbol">+</div><div class="add">添加</div></div></div></div></div>');
 
-            this.$el.append('<div class="row"></div>');
+
 
             _.each(this.privateServiceViews, function(privateServiceView) {
                 privateServiceView.remove();
@@ -51,7 +64,7 @@ define([
 
             this.privateServiceViews = [];
 
-            console.log(this.privateServiceViews);
+         //   console.log(this.privateServiceViews);
 
             this.collection.each(this.addOne);
         },

@@ -50,7 +50,7 @@ define([
 
                 var content= document.createElement('div');
                 content.setAttribute('id', 'content');
-                content.setAttribute('class', 'container-fluid');
+                content.setAttribute('class', 'container-fluid ');
 
                 document.getElementsByTagName('body')[0].insertBefore(content,document.getElementById('side_bar'));
             }

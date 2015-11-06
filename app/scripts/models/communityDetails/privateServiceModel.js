@@ -2,12 +2,13 @@
 
 define([
     'underscore',
-    'backbone'
+    'backbone',
+
 ], function (_, Backbone) {
     'use strict';
 
     var PrivateServiceModel = Backbone.Model.extend({
-        url: '',
+        url: 'api/services/privateServices',
 
         initialize: function() {
         },

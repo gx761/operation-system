@@ -12,4 +12,61 @@
 
 #private_services{
 	
+	.service_box{
+		text-align: center;
+	}
+
+	.service_title{
+	    height: 60px;
+	    line-height: 60px;
+	    background-color: #66ff66;
+	    border: 1px solid grey;
+	    border-bottom: none;
+	}
+
+	.add_service{
+		background-color: #66ff66;	
+		height:90px;
+		border: 1px solid grey;
+		cursor: pointer;
+	}
+
+	.add_service:after{
+		content:'';
+		display:inline-block;
+		height:100%;
+		vertical-align: middle;
+
+	}
+
+	.service_toggle{
+		border:1px solid grey;
+		background-color:white;
+		height: 30px;
+    	line-height: 30px;
+	}
+	.add-service-inner{
+		text-align:center;
+		display:inline-block;
+		vertical-align: middle;
+		width: 100%;
+	}
+	
+}
+
+.logo-box-image{
+	height:120px;
+	width: 120px;
+	border:1px solid grey;
+	img{
+		max-width:100%;
+		max-height:100%;
+	}
+}
+#create_private_service_form{
+	padding:15px;
+}
+#logo_file{
+	    position: absolute;
+    left: -9999px;
 }

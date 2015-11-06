@@ -51,7 +51,7 @@ define([
                 
             privateServiceCollection = new PrivateServiceCollection({});
                 
-            privateServiceCollection.url='/api/communities/privateServices/'+this.communityId;
+            privateServiceCollection.url='/api/services/privateServices/'+this.communityId;
 
             privateServicesView = new PrivateServicesView({
                 el:'#private_services',

@@ -90,3 +90,15 @@ body {
         border-bottom: 0;
     }
 }
+
+
+#content{
+    position: fixed;
+    top:70px;
+    left:0;
+    right:0;
+    bottom:0;
+    &.withSidebar{
+        margin-right:330px;
+    }
+}

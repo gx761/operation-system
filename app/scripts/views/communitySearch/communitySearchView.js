@@ -28,10 +28,11 @@ define([
 
         id: '',
 
-        className: '',
+        className: 'clearfix',
 
         events: {
-            'click #add-community': 'showAddCommunity'
+            'click #add-community': 'showAddCommunity',
+            'click #foldup': 'toggleSearchBar'
 
         },
 
@@ -47,7 +48,26 @@ define([
                 model:createCommunityModel
             });
             view.render().showModal().populate();
+        },
 
+        toggleSearchBar:function(e){
+            e.preventDefault();
+
+            var target = this.$el.find('#community-search');
+
+            if(target.hasClass('searchBar-inactive')){
+                this.$el.find('#community-search').removeClass('searchBar-inactive');
+                e.target.textContent = '收起';
+
+                $('#content').addClass('withSidebar');
+            }
+            else{
+                this.$el.find('#community-search').addClass('searchBar-inactive'); 
+                e.target.textContent = '展开';
+                $('#content').removeClass('withSidebar');
+            }
+
+            
 
         },
 

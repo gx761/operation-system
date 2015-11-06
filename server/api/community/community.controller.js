@@ -129,28 +129,7 @@ exports.show = function(req, res) {
 
 };
 
-exports.showPrivateServices = function(req, res) {
 
-   req.getConnection(function(err, connection) {
-        if(err) { return handleError(res, err); }
-        connection.query('select * from private_service where ?',{'community_id':req.params.id}, function(err, results) {
-            if(err) { return handleError(res, err); }
-            return res.status(200).json(results);
-        });
-    });
-
-};
-exports.showPublicServices = function(req, res) {
-
-   req.getConnection(function(err, connection) {
-        if(err) { return handleError(res, err); }
-        connection.query('select t1.* from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id inner join dic_community as t3 on t2.community_id=t3.communitycode where ?',{'t3.community_id':req.params.id}, function(err, results) {
-            if(err) { return handleError(res, err); }
-            return res.status(200).json(results);
-        });
-    });
-
-};
 
 
 

@@ -15,7 +15,7 @@ define([
 
         id: '',
 
-        className: '',
+        className: 'service_box col-xs-3',
 
         events: {},
 
@@ -25,7 +25,6 @@ define([
 
         render: function () {
 
-            console.log(this.model);
 
             this.$el.html(this.template(this.model.toJSON()));
             

@@ -22,7 +22,8 @@ require.config({
         bootstrap: '../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap',
         parsley: '../bower_components/parsleyjs/dist/parsley',
         'js-cookie': '../bower_components/js-cookie/src/js.cookie',
-        'BackboneValidation': '../bower_components/backbone-validation/dist/backbone-validation-amd'
+        'BackboneValidation': '../bower_components/backbone-validation/dist/backbone-validation-amd',
+        'jquery.iframe-transport':'../bower_components/jquery.iframe-transport/jquery.iframe-transport'
     }
 });
 
