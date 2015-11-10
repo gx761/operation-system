@@ -21,7 +21,7 @@ define([
             this.showSearchBar();
             this.show(new CommunityDetailsView({
                 communityId:communityId
-            }));
+            }),{requiresAuth:true});
 
         },
         showHeader: function() {
@@ -57,14 +57,16 @@ define([
 
             // Establish the requested view into scope
             this.currentView = view;
-
+            var self=this;
             if (typeof options !== 'undefined' && options.requiresAuth) {
-                var self = this;
+           
                 app.session.checkAuth({
                     success: function(res) {
                         // If auth successful, render inside the page wrapper
                         //$('#content').html(self.currentView.render().$el);
-                        self.showSearchBar();
+                       // self.showSearchBar();
+
+                        self.currentView.setElement('#content').render();
                     },
                     error: function(res) {
                         self.navigate('login', {

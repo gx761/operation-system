@@ -10,7 +10,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
-
 var mysql = require('mysql'), // node-mysql module
 	myConnection = require('express-myconnection');// express-myconnection module
 
@@ -29,6 +28,9 @@ if (config.seedDB) {
 var app = express();
 
 app.use( myConnection(mysql, config.dbOptions, 'pool') );
+
+
+
 
 var server = require('http').createServer(app);
 var socketio = require('socket.io')(server, {

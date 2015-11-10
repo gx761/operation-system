@@ -16,8 +16,8 @@ router.get('/mcompany/:id', controller.showMcompanyInfo);
 
 
 router.post('/', auth.hasRole('admin'),controller.create);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
-router.delete('/:id', controller.destroy);
+// router.put('/:id', controller.update);
+// router.patch('/:id', controller.update);
+// router.delete('/:id', controller.destroy);
 
 module.exports = router;

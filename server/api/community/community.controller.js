@@ -13,8 +13,10 @@
 'use strict';
 
 var _ = require('lodash');
-var Community = require('./community.model');
+
+
 var mysql = require('mysql');
+
 var moment =require('moment');
 
 function mysqlLog(sql,inserts){
@@ -50,9 +52,6 @@ exports.create = function(req, res) {
     };
 
 
-
-
-    mysqlLog('insert into dic_community set ?',postData);
       req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
         connection.query('insert into dic_community set ?',postData, function(err, results) {
@@ -146,28 +145,28 @@ exports.showMcompanyInfo = function(req,res){
 };
 
 
-// Updates an existing community in the DB.
-exports.update = function(req, res) {
-    if(req.body._id) { delete req.body._id; }
-    Community.findById(req.params.id, function (err, community) {
-        if (err) { return handleError(res, err); }
-        if(!community) { return res.status(404).send('Not Found'); }
-        var updated = _.merge(community, req.body);
-        updated.save(function (err) {
-            if (err) { return handleError(res, err); }
-            return res.status(200).json(community);
-        });
-    });
-};
+// // Updates an existing community in the DB.
+// exports.update = function(req, res) {
+//     if(req.body._id) { delete req.body._id; }
+//     Community.findById(req.params.id, function (err, community) {
+//         if (err) { return handleError(res, err); }
+//         if(!community) { return res.status(404).send('Not Found'); }
+//         var updated = _.merge(community, req.body);
+//         updated.save(function (err) {
+//             if (err) { return handleError(res, err); }
+//             return res.status(200).json(community);
+//         });
+//     });
+// };
 
-// Deletes a community from the DB.
-exports.destroy = function(req, res) {
-    Community.findById(req.params.id, function (err, community) {
-        if(err) { return handleError(res, err); }
-        if(!community) { return res.status(404).send('Not Found'); }
-        community.remove(function(err) {
-            if(err) { return handleError(res, err); }
-            return res.status(204).send('No Content');
-        });
-    });
-};
+// // Deletes a community from the DB.
+// exports.destroy = function(req, res) {
+//     Community.findById(req.params.id, function (err, community) {
+//         if(err) { return handleError(res, err); }
+//         if(!community) { return res.status(404).send('Not Found'); }
+//         community.remove(function(err) {
+//             if(err) { return handleError(res, err); }
+//             return res.status(204).send('No Content');
+//         });
+//     });
+// };

@@ -44,18 +44,18 @@ define([
 
             var CountriesView = LocationsView.extend({
                 setSelectedId: function(countryId) {
-                    this.populateForm('api/communities/' + countryId + '/getProvinces');
+                    this.populateForm('api/ajax/' + countryId + '/getProvinces');
                 }
             });
 
             var ProvincesView = LocationsView.extend({
                 setSelectedId: function(provinceId) {
-                    this.populateForm('api/communities/' + provinceId + '/getCities');
+                    this.populateForm('api/ajax/' + provinceId + '/getCities');
                 }
             });
             var CitiesView = LocationsView.extend({
                 setSelectedId: function(cityId) {
-                    this.populateForm('api/communities/' + cityId + '/getDistricts');
+                    this.populateForm('api/ajax/' + cityId + '/getDistricts');
                 }
             });
 

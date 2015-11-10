@@ -53,9 +53,12 @@ define([
                 
             privateServiceCollection.url='/api/services/privateServices/'+this.communityId;
 
+         
+
             privateServicesView = new PrivateServicesView({
                 el:'#private_services',
-                collection:privateServiceCollection
+                collection:privateServiceCollection,
+                communityId:this.communityId
             });
 
             privateServiceCollection.fetch({reset:true});

@@ -24,23 +24,35 @@ define([
             'click .add_service': 'addService',
         },
 
-        initialize: function() {
+        initialize: function(options) {
             _.bindAll(this);
             // var self = this;
             this.listenTo(this.collection, 'reset', this.addAll);
+            this.listenTo(this.collection, 'add', this.addOne);
+
             // this.collection.on("reset", this.addAll);
+            // 
+            
+            this.communityId = options.communityId;
+
         },
 
         addService:function(e){
             e.preventDefault();
             var createCommunityModel = new PrivateServiceModel({});
+
+
+            createCommunityModel.set('communityId',this.communityId);
+
             var view = new CreatePrivateServiceView({
-                model:createCommunityModel
+                model:createCommunityModel,
+                collection:this.collection
             });
             view.render().showModal();
 
         },
         addOne: function(privateService) {
+            console.log(privateService);
 
             var privateServiceView = new PrivateServiceView({
                 model: privateService

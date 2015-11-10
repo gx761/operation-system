@@ -12,6 +12,8 @@
     "express-jwt": "^3.0.0",
     "express-myconnection": "^1.0.4",
     "express-session": "~1.0.2",
+    "express-validator": "^2.18.0",
+    "formidable": "^1.0.17",
     "jade": "~1.2.0",
     "jsonwebtoken": "^5.0.0",
     "lodash": "~2.4.1",

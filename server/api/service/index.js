@@ -2,13 +2,15 @@
 
 var express = require('express');
 var controller = require('./service.controller');
-
 var router = express.Router();
+var auth = require('../../auth/auth.service');
+
 
 
 router.get('/privateServices/:id', controller.showPrivateServices);
 router.get('/pubclicServices/:id', controller.showPublicServices);
-router.post('/privateServices', controller.createPrivateService);
+router.post('/privateServices', auth.hasRole('admin'), controller.createPrivateService);
+
 
 
 router.get('/', controller.index);

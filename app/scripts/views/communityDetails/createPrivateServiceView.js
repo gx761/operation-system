@@ -4,12 +4,14 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'js-cookie',
     'templates',
     'BackboneValidation',
     'views/modalDialogView',
-    'jquery.iframe-transport'
+    'jquery.iframe-transport',
 
-], function($, _, Backbone, JST) {
+
+], function($, _, Backbone, Cookies, JST) {
     'use strict';
 
     var CreatePrivateServiceView = Backbone.ModalView.extend({
@@ -23,12 +25,14 @@ define([
 
         },
 
-        initialize: function() {
+        initialize: function(options) {
             //        this.listenTo(this.model, 'change', this.render);
             _.bind(this.hideModal, this);
+            this.collection = options.collection;
         },
 
         render: function() {
+
 
             this.$el.html(this.template(this.model.toJSON()));
             Backbone.Validation.bind(this);
@@ -90,30 +94,48 @@ define([
                 // this.model.set('gpslat', $('#gpslat').val());
                 // this.model.validate();
 
-                var values={};
-                
+              //  var values = {};
 
-                _.each($('#create_private_service_form').serializeArray(),function(input){
-       
-                    values[input.name] = input.value;
+                var formData = new FormData($('#create_private_service_form')[0]);
 
-                });
+                // _.each($('#create_private_service_form').serializeArray(), function(input) {
+
+                //   //  values[input.name] = input.value;
+                //   formData.append(input.name,input.value);
+                // });
 
 
                 var self = this;
 
-                this.model.save(values, {
-                    iframe:true,
-                    data:values,
-                    files:$('#logo_file'),
-                    success: function(model, response, options) {
-                        alert('物业自营服务添加成功');
-                        self.hideModal();
+                
+
+                
+              
+                $.ajax({
+                    url:'/api/services/privateServices',
+                    type:'POST',
+                    data:formData,
+                    success:function(data){
+                        if(data.length>0){
+                            self.model.set(data[0]);
+                            self.collection.add(self.model);
+                            self.hideModal();
+                            alert('服务添加成功');
+                        }
+
+                        
                     },
-                    error:function(model, response, options){
-                        console.log(response);
-                    }
+                    error:function(error){
+
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                    
                 });
+
+
+
 
 
             }
