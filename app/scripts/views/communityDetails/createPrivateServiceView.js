@@ -120,7 +120,7 @@ define([
                             self.model.set(data[0]);
                             self.collection.add(self.model);
                             self.hideModal();
-                            alert('服务添加成功');
+                            self.showNotification('服务添加成功');
                         }
 
                         

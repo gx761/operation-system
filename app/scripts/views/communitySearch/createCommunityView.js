@@ -112,7 +112,7 @@ define([
                 if(this.model.isValid()){
                     this.model.save(null,{
                         success:function(model, response, options){
-                            alert('小区添加成功');
+                            self.showNotification('小区添加成功');
                             self.hideModal();
                         }
                     });

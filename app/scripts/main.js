@@ -23,7 +23,7 @@ require.config({
         parsley: '../bower_components/parsleyjs/dist/parsley',
         'js-cookie': '../bower_components/js-cookie/src/js.cookie',
         'BackboneValidation': '../bower_components/backbone-validation/dist/backbone-validation-amd',
-        'jquery.iframe-transport':'../bower_components/jquery.iframe-transport/jquery.iframe-transport'
+        'jquery.iframe-transport': '../bower_components/jquery.iframe-transport/jquery.iframe-transport'
     }
 });
 
@@ -39,9 +39,11 @@ require([
     // Backbone.emulateHttp =true;
     app.session = new SessionModel({});
     app.router = new Backbone.Router();
-    var loginRouter = new LoginRouter({});
+
+
+ //   var loginRouter = new LoginRouter({});
     var indexRouter = new IndexRouter({});
-    var communityRouter = new CommunityRouter({});
+ //   var communityRouter = new CommunityRouter({});
 
 
 

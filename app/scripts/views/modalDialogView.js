@@ -47,8 +47,6 @@ define([
 
             $(document.body).on('keyup',this.keyUp.bind(this));
             return this;
-
-
         },
         hideModal: function() {
 
@@ -61,8 +59,6 @@ define([
 
             $(document.body).off('keyup',this.keyUp.bind(this));
             this.$el.off('click');
-
-
         },
         keyUp: function(e) {
             if(e.keyCode===27){
@@ -74,6 +70,17 @@ define([
             if (e.target.id === 'modal') {
                 this.hideModal();
             }
+        },
+        showNotification:function(message){
+            var notification=$('<div class="full-wrapper"><div class="alert alert-success float-alert">'+message+'</div></div>');
+            notification.appendTo($('body'));
+         
+            setTimeout(function(){
+                notification.fadeOut('fast', function() {
+                    notification.remove();
+                });
+            }, 3000);
+
         }
 
     });

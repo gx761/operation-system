@@ -37,6 +37,8 @@ define([
         },
 
         initialize: function() {
+
+            _.bindAll(this);
             //this.populateCountries();
             // this.listenTo(this.model, 'change', this.render);
 
@@ -55,14 +57,16 @@ define([
 
             var target = this.$el.find('#community-search');
 
+            console.log(target);
+
             if(target.hasClass('searchBar-inactive')){
-                this.$el.find('#community-search').removeClass('searchBar-inactive');
+                target.removeClass('searchBar-inactive');
                 e.target.textContent = '收起';
 
                 $('#content').addClass('withSidebar');
             }
             else{
-                this.$el.find('#community-search').addClass('searchBar-inactive'); 
+                target.addClass('searchBar-inactive'); 
                 e.target.textContent = '展开';
                 $('#content').removeClass('withSidebar');
             }

@@ -6,7 +6,12 @@ var moment = require('moment');
 var fs = require('fs');
 var formidable = require('formidable');
 var path = require('path');
+var mysql  =require('mysql');
 
+function mysqlLog(sql,inserts){
+    var sqlString = mysql.format(sql, inserts);
+    console.log(sqlString);
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);
@@ -92,20 +97,20 @@ exports.createPrivateService = function(req, res) {
                 if (err) {
                   return handleError(res, err);
                 }
-                if(results.insertId){
+                if (results.insertId) {
 
-                  connection.query('select * from private_service where ?',{id:results.insertId},function(err,results){
+                  connection.query('select * from private_service where ?', {
+                    id: results.insertId
+                  }, function(err, results) {
                     if (err) {
                       return handleError(res, err);
                     }
 
                     return res.status(201).json(results);
                   });
-                  
+
                 }
 
-
-                
               });
             });
 
@@ -120,13 +125,74 @@ exports.createPrivateService = function(req, res) {
       return handleError(res, new Error('there is no file'));
     }
 
+  });
 
+};
+
+exports.updatePrivateService=function(req,res){
+
+console.log(req.body);
+
+  if(!req.body){
+    return handleError(res,new Error('no body'));
+  }
+  var id = req.body.id;
+
+   req.body.createtime=moment(req.body.createtime).format('YYYY-MM-DD HH:mm:ss');
+   req.body.modifytime=moment().format('YYYY-MM-DD HH:mm:ss');
+   req.body.modifyoperator=req.user._id;
+   delete req.body.id;
+
+  req.getConnection(function(err,connection){
+    if(err){
+      return handleError(res,err);
+    }
+
+    
+    connection.query('update private_service set ? where ?',[req.body,{'id':id}],function(err,results){
+      if(err){
+        return handleError(res,err);
+      }
+       
+       console.log(results);
+       return res.status(200).json(results);
+
+    });
 
   });
 
 
+},
 
-};
+
+
+exports.deletePrivateService = function(req, res) {
+
+  var serviceId = parseInt(req.params.id);
+  if (!_.isNumber(serviceId)||isNaN(serviceId)) {
+    return handleError(res,new Error('Id is invalid'));
+  }
+
+
+  req.getConnection(function(err,connection){
+    if(err){
+      return handleError(res,err);
+    }
+    mysqlLog('delete  from private_service where ?',{id:serviceId});
+    connection.query('delete  from private_service where ?',{id:serviceId},function(err,results){
+      if(err){
+        return handleError(res,err);
+      }
+      return res.status(200).json(results);
+
+    });
+
+  });
+
+},
+
+
+
 
 
 

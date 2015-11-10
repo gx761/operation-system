@@ -29,7 +29,7 @@ define([
             // var self = this;
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this.collection, 'add', this.addOne);
-
+        //   this.listenTo(this.collection, 'remove', this.removeOne);
             // this.collection.on("reset", this.addAll);
             // 
             
@@ -42,7 +42,7 @@ define([
             var createCommunityModel = new PrivateServiceModel({});
 
 
-            createCommunityModel.set('communityId',this.communityId);
+            createCommunityModel.set('community_id',this.communityId);
 
             var view = new CreatePrivateServiceView({
                 model:createCommunityModel,
@@ -52,7 +52,6 @@ define([
 
         },
         addOne: function(privateService) {
-            console.log(privateService);
 
             var privateServiceView = new PrivateServiceView({
                 model: privateService
@@ -66,7 +65,7 @@ define([
         },
         addAll: function() {
 
-            this.$el.append('<p>物业自营<span class="center-text">' + this.collection.length + '个</span></p><div class="row"><div class="col-xs-3"><div class="add_service"><div class="add-service-inner"><div class="synbol">+</div><div class="add">添加</div></div></div></div></div>');
+            this.$el.append('<p>物业自营<span class="center-text">' + this.collection.length + '个</span></p><div class="row"><div class="col-sm-6 col-md-3"><div class="add_service"><div class="add-service-inner"><div class="synbol">+</div><div class="add">添加</div></div></div></div></div>');
 
 
 

@@ -8,7 +8,7 @@ define([
     'use strict';
 
     var PrivateServiceModel = Backbone.Model.extend({
-        url: 'api/services/privateServices',
+        urlRoot: 'api/services/privateServices',
 
         initialize: function() {
         },
@@ -20,7 +20,10 @@ define([
         },
 
         parse: function(response, options)  {
-            return response;
+            if(options.parse){
+                return response;
+            }
+
         }
     });
 

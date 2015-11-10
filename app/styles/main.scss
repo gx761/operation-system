@@ -10,10 +10,14 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/bootstr
     padding: 0.2em 0;
 }
 
+html{
+    height:100%;
+}
 /* Space out content a bit */
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    height:100%;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -101,4 +105,15 @@ body {
     &.withSidebar{
         margin-right:330px;
     }
+}
+
+.full-wrapper{
+    position:absolute;
+    height:100%;
+    width:100%;
+}
+.float-alert{
+    z-index:9999;
+    width:200px;
+    margin:30px auto 0;
 }

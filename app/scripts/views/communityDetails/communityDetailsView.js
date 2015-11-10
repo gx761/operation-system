@@ -97,8 +97,7 @@ define([
 
         render: function() {
             //      this.$el.html(this.template(this.model.toJSON()));
-          
-            this.$el.append(this.template({}));
+            this.$el.html(this.template({}));
             this.populate();
             return this;
         }
