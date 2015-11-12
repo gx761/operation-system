@@ -8,11 +8,11 @@ define([
     'views/communityDetails/privateServiceView',
     'views/communityDetails/createPrivateServiceView',
     'models/communityDetails/privateServiceModel'
-], function($, _, Backbone, JST, PrivateServiceView,CreatePrivateServiceView,PrivateServiceModel) {
+], function($, _, Backbone, JST, PrivateServiceView, CreatePrivateServiceView, PrivateServiceModel) {
     'use strict';
 
     var PrivateServicesView = Backbone.View.extend({
-        template: JST['app/scripts/templates/privateServices.ejs'],
+        template: JST['app/scripts/templates/communityDetails/privateServices.ejs'],
 
         tagName: 'div',
 
@@ -29,24 +29,24 @@ define([
             // var self = this;
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this.collection, 'add', this.addOne);
-        //   this.listenTo(this.collection, 'remove', this.removeOne);
+            //   this.listenTo(this.collection, 'remove', this.removeOne);
             // this.collection.on("reset", this.addAll);
             // 
-            
+
             this.communityId = options.communityId;
 
         },
 
-        addService:function(e){
+        addService: function(e) {
             e.preventDefault();
             var createPrivateServiceModel = new PrivateServiceModel({});
 
 
-            createPrivateServiceModel.set('community_id',this.communityId);
+            createPrivateServiceModel.set('community_id', this.communityId);
 
             var view = new CreatePrivateServiceView({
-                model:createPrivateServiceModel,
-                collection:this.collection
+                model: createPrivateServiceModel,
+                collection: this.collection
             });
             view.render().showModal();
 
@@ -65,9 +65,8 @@ define([
         },
         addAll: function() {
 
-            this.$el.append('<p>物业自营<span class="center-text">' + this.collection.length + '个</span></p><div class="service_boxs clearfix"><div class="service_box"><div class="add_service"><div class="add-service-inner"><div class="synbol">+</div><div class="add">添加</div></div></div></div></div>');
 
-
+            this.render();
 
             _.each(this.privateServiceViews, function(privateServiceView) {
                 privateServiceView.remove();
@@ -75,12 +74,19 @@ define([
 
             this.privateServiceViews = [];
 
-         //   console.log(this.privateServiceViews);
+            //   console.log(this.privateServiceViews);
 
             this.collection.each(this.addOne);
         },
+        render: function() {
 
-    
+
+
+            this.$el.html(this.template({number:this.collection.length}));
+            return this;
+        },
+
+
     });
 
     return PrivateServicesView;

@@ -106,8 +106,16 @@ exports.index = function(req, res) {
                 }
                 return res.status(200).json(results);
             });
+        }else if(data.name){
+             connection.query('select * from dic_community where communityname like ?', ['%' + data.name + '%'], function(err, results) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                return res.status(200).json(results);
+            });
+
         } else {
-            return res.status(500).send();
+            return res.status(500).send('no results');
         }
 
     });

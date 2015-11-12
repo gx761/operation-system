@@ -19,7 +19,9 @@
     background-color: #f2f2f2;
   }
 
-}
+  .location_selector{
+    float:left;
+  }
 
 .searchBar-inactive{
   transform: translate(330px,0);
@@ -36,3 +38,31 @@
   padding:30px 10px;
 }
 
+
+
+}
+
+
+  #foldup{
+        position: absolute;
+    top: 50%;
+    left: -30px;
+    background-color: #f2f2f2;
+  }
+
+.searchBar-inactive{
+  transform: translate(330px,0);
+}
+
+#add-community{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+
+#create_community_form{
+  padding:30px 10px;
+}
+
+  

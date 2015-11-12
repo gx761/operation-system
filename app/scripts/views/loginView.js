@@ -45,7 +45,7 @@ define([
                     success: function (res) {
                        console.log("SUCCESS",res);
 
-                       app.router.navigate("/", {trigger: true});
+                       app.router.navigate("/", {trigger: true,replace: true});
 
 
                     },

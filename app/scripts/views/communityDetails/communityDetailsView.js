@@ -9,10 +9,12 @@ define([
     'views/communityDetails/servicesView',
     'models/communityDetails/mcompanyModel',
     'collections/communityDetails/privateServiceCollection',
+    'collections/communityDetails/publicServiceCollection',
+
     'views/communityDetails/privateServicesView',
     'views/communityDetails/publicServicesView',
-    
-], function($, _, Backbone, JST,CommunityHeaderView,ServicesView,McompanyModel,PrivateServiceCollection,PrivateServicesView,PublicervicesView) {
+
+], function($, _, Backbone, JST, CommunityHeaderView, ServicesView, McompanyModel, PrivateServiceCollection, PublicServiceCollection, PrivateServicesView, PublicServicesView) {
     'use strict';
 
     var CommunityDetailsView = Backbone.View.extend({
@@ -28,49 +30,64 @@ define([
             //      this.listenTo(this.model, 'change', this.render);
             this.communityId = options.communityId;
         },
-        populateHeader:function(){
+        populateHeader: function() {
             var mcompanyModel,
                 commmunityHeader;
 
-            mcompanyModel = new McompanyModel({
-            });
-            
-            mcompanyModel.set('communityId',this.communityId);
+            mcompanyModel = new McompanyModel({});
 
-            commmunityHeader= new CommunityHeaderView({
-                el:'#community_header',
-                model:mcompanyModel
+            mcompanyModel.set('communityId', this.communityId);
+
+            commmunityHeader = new CommunityHeaderView({
+                el: '#community_header',
+                model: mcompanyModel
             });
 
             mcompanyModel.fetch();
         },
 
-        populatePrivateServices:function(){
+        populatePrivateServices: function() {
             var privateServiceCollection,
                 privateServicesView;
-                
-            privateServiceCollection = new PrivateServiceCollection({});
-                
-            privateServiceCollection.url='/api/services/privateServices/'+this.communityId;
 
-         
+            privateServiceCollection = new PrivateServiceCollection({});
+
+            privateServiceCollection.url = '/api/services/privateServices/' + this.communityId;
 
             privateServicesView = new PrivateServicesView({
-                el:'#private_services',
-                collection:privateServiceCollection,
+                el: '#private_services',
+                collection: privateServiceCollection,
+                communityId: this.communityId
+            });
+
+            privateServiceCollection.fetch({
+                reset: true
+            });
+        },
+
+        populatePublicServices: function() {
+            var publicServicesCollection,
+                publicServicesView;
+            publicServicesCollection = new PublicServiceCollection({});
+            publicServicesCollection.url = '/api/services/publicServices/' + this.communityId;
+
+            publicServicesView = new PublicServicesView({
+                el:'#public_services',
+                collection:publicServicesCollection,
                 communityId:this.communityId
             });
 
-            privateServiceCollection.fetch({reset:true});
+            publicServicesCollection.fetch({
+                reset:true
+            });
+
         },
-        
+
         populate: function() {
             this.populateHeader();
 
             this.populatePrivateServices();
-
-
-
+            this.populatePublicServices();
 
 
             // var privateServices = new ServicesView({});

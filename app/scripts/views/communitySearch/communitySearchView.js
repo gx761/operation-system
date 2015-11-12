@@ -57,8 +57,6 @@ define([
 
             var target = this.$el.find('#community-search');
 
-            console.log(target);
-
             if(target.hasClass('searchBar-inactive')){
                 target.removeClass('searchBar-inactive');
                 e.target.textContent = '收起';
@@ -113,29 +111,46 @@ define([
                 }
             });
 
-
-
             this.searchResultsView = new SearchResultsView({
                 el: '#search-result-list',
                 collection: this.communityCollection
             });
             this.communityView = new CommunityView({});
+
+
+
             this.countriesView = new CountriesView({
-                el: '#country-selector',
+      //          el: '#country-selector',
+                name:'country',
                 collection: this.countryCollection
             });
+
+            $('#country-selector').html(this.countriesView.render().el);
+
+
             this.provincesView = new ProvincesView({
-                el: '#province-selector',
+            //    el: '#province-selector',
+                name:'province',
                 collection: this.provinceCollection
             });
+            $('#province-selector').html(this.provincesView.render().el);
+
+
             this.citiesView = new CitiesView({
-                el: '#city-selector',
+       //         el: '#city-selector',
+                name:'city',
                 collection: this.cityCollection
             });
+
+                $('#city-selector').html(this.citiesView.render().el);
+
             this.districtsView = new DistrictsView({
-                el: '#district-selector',
+        //       el: '#district-selector',
+                name:'district',
                 collection: this.districtCollection
             });
+
+            $('#district-selector').html(this.districtsView.render().el);
 
 
             this.countriesView.childrenView = this.provincesView;
@@ -150,10 +165,10 @@ define([
         },
         updateSearchResults: function() {
             var postData = {
-                countryId: $('#country-selector').val(),
-                provinceId: $('#province-selector').val(),
-                cityId: $('#city-selector').val(),
-                districtId: $('#district-selector').val(),
+                countryId: $('#country-selector select').val(),
+                provinceId: $('#province-selector select').val(),
+                cityId: $('#city-selector select').val(),
+                districtId: $('#district-selector select').val(),
                 name: $('#community-name').val()
             };
 
@@ -167,7 +182,7 @@ define([
 
         render: function() {
             this.$el.html(this.template({}));
-            this.populate();
+       //     this.populate();
             return this;
         }
     });

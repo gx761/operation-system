@@ -12,11 +12,16 @@ define([
 
     var LocationsView = Backbone.View.extend({
 
+        tagName:'select',
+        className:'form-control',
+
+
         events: {
             'change': 'changeSelected'
         },
         initialize: function (options) {
-        //    this.el = options.el;
+            this.$el.attr('name',options.name) ;
+            $(this.el).html('<option value="">请选择</option>');
              _.bindAll(this);
             this.collection.on('reset', this.addAll);
         },

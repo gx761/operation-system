@@ -19,8 +19,10 @@ define(["jquery",
     };
 
     Backbone.View.prototype.close = function() {
+
+      this.undelegateEvents();
         this.remove();
-        this.unbind();
+        this.off();
         if (this.onClose) {
             this.onClose();
         }

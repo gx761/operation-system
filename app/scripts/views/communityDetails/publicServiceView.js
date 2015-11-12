@@ -5,26 +5,68 @@ define([
     'underscore',
     'backbone',
     'templates'
-], function ($, _, Backbone, JST) {
+], function($, _, Backbone, JST) {
     'use strict';
 
     var PublicServiceView = Backbone.View.extend({
-        template: JST['app/scripts/templates/publicService.ejs'],
+        template: JST['app/scripts/templates/communityDetails/publicService.ejs'],
 
         tagName: 'div',
 
         id: '',
 
-        className: '',
+        className: 'service_box',
 
-        events: {},
+        events: {
+            'click .stop_service': 'disablePublicService',
+            'click .start_service': 'startPublicService',
+        },
+        disablePublicService: function(e) {
+            e.preventDefault();
+            var returnValue = window.confirm('请确认是否要暂停该服务?');
+            if (returnValue === true) {
+                this.model.set('disable',true);
+                this.model.save({}, {
+                    parse: false,
+                    wait:true,
+                    success:function(model, response, options){
+                        model.set('community_id',null);
+                    }
+                });
+            } else {
+                return;
+            }
 
-        initialize: function () {
+        },
+        startPublicService: function(e) {
+            e.preventDefault();
+            var returnValue = window.confirm('请确认是否要启动该服务?');
+            console.log(this.communityId);
+
+
+            if (returnValue === true) {
+                 this.model.set('disable',false);
+                this.model.set('community_id', parseInt(this.communityId));
+                this.model.save({}, {
+                    parse: false
+                });
+            } else {
+                return;
+            }
+        },
+
+        initialize: function(options) {
+            _.bindAll(this);
+
+            console.log(this.model);
+            this.communityId = options.communityId;
+
             this.listenTo(this.model, 'change', this.render);
         },
 
-        render: function () {
+        render: function() {
             this.$el.html(this.template(this.model.toJSON()));
+            return this;
         }
     });
 

@@ -24,7 +24,7 @@ function checkO2oServiceSuspendable(req, res, id) {
     if (err) {
       deferred.reject(err);
     }
-    connection.query('select count(*) as numberOfCommunities from community_public_service where ? and status="active"', {
+    connection.query('select count(*) as numberOfCommunities from community_public_service where ? ', {
       public_service_id: id
     }, function(err, results) {
       if (err) {
@@ -67,6 +67,76 @@ function checkO2oServiceDeletable(req, res, id) {
   return deferred.promise;
 }
 
+
+exports.showPublicServices = function(req, res) {
+
+
+
+  req.getConnection(function(err, connection) {
+    if (err) {
+      return handleError(res, err);
+    }
+    connection.query('  select t1.*,t3.community_id from public_service as t1 left join (select t1.id,t2.community_id from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id where ? ) as t3 on t1.id = t3.id', {
+      't2.community_id': req.params.communityId
+    }, function(err, results) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(200).json(results);
+    });
+  });
+
+};
+
+exports.updatePublicService = function(req, res) {
+
+  console.log(req.body);
+
+  if (req.body.disable) {
+
+    req.getConnection(function(err, connection) {
+      if (err) {
+        return handleError(res, err);
+      }
+
+      connection.query('delete from community_public_service where ? and ?', [{
+        'public_service_id': req.body.id,
+      }, {
+        'community_id': req.body.community_id
+      }], function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+        return res.status(200).json(results);
+      });
+    });
+
+  } else if(!req.body.disable) {
+    req.getConnection(function(err, connection) {
+      if (err) {
+        return handleError(res, err);
+      }
+
+
+      connection.query('insert into community_public_service  set ?', {
+        'public_service_id': req.body.id,
+        'community_id': req.body.community_id
+      }, function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+        return res.status(200).json(results);
+      });
+    });
+
+  }else{
+    return handleError(res,new Error('invalid request'));
+  } 
+
+};
+
+
+
 exports.showPrivateServices = function(req, res) {
 
   req.getConnection(function(err, connection) {
@@ -74,7 +144,7 @@ exports.showPrivateServices = function(req, res) {
       return handleError(res, err);
     }
     connection.query('select * from private_service where ?', {
-      'community_id': req.params.id
+      'community_id': req.params.communityId
     }, function(err, results) {
       if (err) {
         return handleError(res, err);
@@ -86,27 +156,6 @@ exports.showPrivateServices = function(req, res) {
 };
 
 
-exports.showPublicServices = function(req, res) {
-  req.getConnection(function(err, connection) {
-    if (err) {
-      return handleError(res, err);
-    }
-
-    mysqlLog('select t1.* from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id inner join dic_community as t3 on t2.community_id=t3.communitycode where ?', {
-      't3.community_id': req.params.id
-    });
-
-    connection.query('select t1.* from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id inner join dic_community as t3 on t2.community_id=t3.communitycode where ?', {
-      't3.community_id': req.params.id
-    }, function(err, results) {
-      if (err) {
-        return handleError(res, err);
-      }
-      return res.status(200).json(results);
-    });
-  });
-
-};
 
 exports.showO2oServices = function(req, res) {
   req.getConnection(function(err, connection) {
@@ -149,7 +198,7 @@ exports.createPrivateService = function(req, res) {
           return handleError(res, new Error('file type is not supported'));
         } else {
           var oldPath = file.path,
-            newPath = 'uploads'+path.sep+'private' + path.sep + Date.now() + file.name;
+            newPath = 'uploads' + path.sep + 'private' + path.sep + Date.now() + file.name;
 
           fs.rename(oldPath, newPath, function() {
             console.log('file is saved');
@@ -220,7 +269,7 @@ exports.createO2oService = function(req, res) {
           return handleError(res, new Error('file type is not supported'));
         } else {
           var oldPath = file.path,
-            newPath = 'uploads'+path.sep+'public' + path.sep + Date.now() + file.name;
+            newPath = 'uploads' + path.sep + 'public' + path.sep + Date.now() + file.name;
 
           fs.rename(oldPath, newPath, function() {
             console.log('file is saved');
@@ -266,7 +315,6 @@ exports.createO2oService = function(req, res) {
   });
 
 };
-
 
 
 
@@ -368,7 +416,7 @@ exports.updateO2oService = function(req, res) {
   req.body.modifyoperator = req.user._id;
   delete req.body.id;
 
-  if (req.body.status === 'active') {         //If activating the service, just activate it.
+  if (req.body.status === 'active') { //If activating the service, just activate it.
     req.getConnection(function(err, connection) {
       if (err) {
         return handleError(res, err);
@@ -383,7 +431,7 @@ exports.updateO2oService = function(req, res) {
         return res.status(200).json(results);
       });
     });
-  } else {                      // if trying to disbale the service, check if any service is used.
+  } else { // if trying to disbale the service, check if any service is used.
 
     checkO2oServiceSuspendable(req, res, id).then(function(value) {
 
@@ -416,7 +464,6 @@ exports.updateO2oService = function(req, res) {
 
 
 };
-
 
 
 
