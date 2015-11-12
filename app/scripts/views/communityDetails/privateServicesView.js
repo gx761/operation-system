@@ -39,13 +39,13 @@ define([
 
         addService:function(e){
             e.preventDefault();
-            var createCommunityModel = new PrivateServiceModel({});
+            var createPrivateServiceModel = new PrivateServiceModel({});
 
 
-            createCommunityModel.set('community_id',this.communityId);
+            createPrivateServiceModel.set('community_id',this.communityId);
 
             var view = new CreatePrivateServiceView({
-                model:createCommunityModel,
+                model:createPrivateServiceModel,
                 collection:this.collection
             });
             view.render().showModal();
@@ -59,13 +59,13 @@ define([
 
             this.privateServiceViews.push(privateServiceView);
 
-            this.$el.find('.row').append(
+            this.$el.find('.service_boxs').append(
                 privateServiceView.render().el
             );
         },
         addAll: function() {
 
-            this.$el.append('<p>物业自营<span class="center-text">' + this.collection.length + '个</span></p><div class="row"><div class="col-sm-6 col-md-3"><div class="add_service"><div class="add-service-inner"><div class="synbol">+</div><div class="add">添加</div></div></div></div></div>');
+            this.$el.append('<p>物业自营<span class="center-text">' + this.collection.length + '个</span></p><div class="service_boxs clearfix"><div class="service_box"><div class="add_service"><div class="add-service-inner"><div class="synbol">+</div><div class="add">添加</div></div></div></div></div>');
 
 
 
@@ -80,9 +80,7 @@ define([
             this.collection.each(this.addOne);
         },
 
-        render: function() {
-            this.$el.html(this.template(this.model.toJSON()));
-        }
+    
     });
 
     return PrivateServicesView;

@@ -10,66 +10,70 @@
     border-radius: 4px;
 }
 
-#private_services{
+
 	
-	.service_box{
-		text-align: center;
-		margin-bottom:5px;
-	}
-
-	.service_title{
-	    height: 60px;
-	    line-height: 60px;
-	    background-color: #66ff66;
-	    border: 1px solid grey;
-	    border-bottom: none;
-	    font-size:(14rem / 10);
-	    &.inactive{
-			background-color: #BDBDBD;
-		}
-	}
-
-	.add_service{
-		background-color: #66ff66;	
-		height:90px;
-		border: 1px solid grey;
-		cursor: pointer;
-		 font-size:(12rem / 10);
-	}
-
-
-	.add_service:after{
-		content:'';
-		display:inline-block;
-		height:100%;
-		vertical-align: middle;
-
-	}
-
-	.service_toggle{
-		border:1px solid grey;
-		background-color:white;
-		height: 30px;
-    		line-height: 30px;
-	}
-	.add-service-inner{
-		text-align:center;
-		display:inline-block;
-		vertical-align: middle;
-		width: 100%;
-		 font-size:(12rem/10);
-	}
-	.service_toggle{
-		font-size:(11rem/10);	
-	}
-	.stop_service{
-		cursor:pointer;
-		text-decoration:none;
-	}
-	.start_service{
-		@extend .stop_service
-	}	
+.service_box{
+    text-align: center;
+    margin-bottom: 5px;
+    height: 100px;
+    width: 100px;
+    float: left;
+    margin-right: 10px;
 }
+
+.service_title{
+    height: 60px;
+    line-height: 60px;
+    background-color: #66ff66;
+    border: 1px solid grey;
+    border-bottom: none;
+    font-size:(14rem / 10);
+    &.inactive{
+		background-color: #BDBDBD;
+	}
+}
+
+.add_service{
+	background-color: #66ff66;	
+	height:90px;
+	border: 1px solid grey;
+	cursor: pointer;
+	 font-size:(12rem / 10);
+}
+
+
+.add_service:after{
+	content:'';
+	display:inline-block;
+	height:100%;
+	vertical-align: middle;
+
+}
+
+.service_toggle{
+	border:1px solid grey;
+	background-color:white;
+	height: 30px;
+		line-height: 30px;
+}
+.add-service-inner{
+	text-align:center;
+	display:inline-block;
+	vertical-align: middle;
+	width: 100%;
+	 font-size:(12rem/10);
+}
+.service_toggle{
+	font-size:(11rem/10);	
+}
+.stop_service{
+	cursor:pointer;
+	text-decoration:none;
+}
+.start_service{
+	@extend .stop_service
+}	
+
 
 .logo-box-image{
 	height:120px;
@@ -80,9 +84,7 @@
 		max-height:100%;
 	}
 }
-#create_private_service_form{
-	padding:15px;
-}
+
 #logo_file{
 	    position: absolute;
     left: -9999px;

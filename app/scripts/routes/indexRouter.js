@@ -8,19 +8,25 @@ define([
     'views/loginView',
     'views/communitySearch/communitySearchView',
     'views/communityDetails/communityDetailsView',
+    'views/o2oServices/o2oServicesView',
     'app'
-], function($, Backbone, HeaderView, IndexView, LoginView, CommunitySearchView, CommunityDetailsView,app) {
+], function($, Backbone, HeaderView, IndexView, LoginView, CommunitySearchView, CommunityDetailsView,O2oServicesView,app) {
     'use strict';
 
     var IndexRouter = Backbone.Router.extend({
         routes: {
             '': 'index',
             'login': 'login',
-             'community/:communityId': 'showServicesInfo'
+             'community/:communityId': 'showServicesInfo',
+             'publicservices':'listPublicServices'
         },
-         showServicesInfo: function(communityId) {
+        listPublicServices:function(){
+            this.showHeader();
+            this.showSearchBar();
+            this.show(new O2oServicesView({}),{requiresAuth:true});
+        },
 
-            //   $('#content').empty();
+         showServicesInfo: function(communityId) {
             this.showHeader();
             this.showSearchBar();
             this.show(new CommunityDetailsView({
@@ -28,13 +34,12 @@ define([
             }), {
                 requiresAuth: true
             });
-
         },
+
         login: function() {
-
             this.show(new LoginView({}));
-
         },
+
         index: function() {
 
             $('#content').empty();
@@ -60,7 +65,9 @@ define([
         show: function(view, options) {
 
             // Close and unbind any existing page view
-            if (this.currentView && _.isFunction(this.currentView.close)) this.currentView.close();
+            if (this.currentView && _.isFunction(this.currentView.close)) {
+                this.currentView.close();
+            }
             // Re create the main div
             if(!document.getElementById('content')){
 

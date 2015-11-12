@@ -3,23 +3,23 @@
 define([
     'underscore',
     'backbone'
-], function (_, Backbone) {
+], function(_, Backbone) {
     'use strict';
 
     var PublicServiceModel = Backbone.Model.extend({
-        url: '',
+        urlRoot: 'api/services/publicServices',
 
-        initialize: function() {
-        },
+        initialize: function() {},
 
-        defaults: {
-        },
+        defaults: {},
 
-        validate: function(attrs, options) {
-        },
+        validate: function(attrs, options) {},
 
-        parse: function(response, options)  {
-            return response;
+        parse: function(response, options) {
+            if (options.parse) {
+                return response;
+            }
+
         }
     });
 

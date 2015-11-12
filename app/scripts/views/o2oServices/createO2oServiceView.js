@@ -4,37 +4,25 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'js-cookie',
     'templates',
-    'BackboneValidation',
     'views/modalDialogView'
-
-], function($, _, Backbone, Cookies, JST) {
+], function($, _, Backbone, JST) {
     'use strict';
 
-    var CreatePrivateServiceView = Backbone.ModalView.extend({
-        template: JST['app/scripts/templates/communityDetails/createPrivateServiceView.ejs'],
+    var CreateO2oServiceView = Backbone.ModalView.extend({
+        template: JST['app/scripts/templates/o2oServices/createO2oService.ejs'],
 
         events: {
             'click #cancel_create': 'cancelCreate',
             'click #confirm_create': 'confirmCreate',
             'click #add-logo-button': 'uploadLogo',
             'change #logo_file': 'previewLogo'
-
         },
 
         initialize: function(options) {
             //        this.listenTo(this.model, 'change', this.render);
             _.bind(this.hideModal, this);
             this.collection = options.collection;
-        },
-
-        render: function() {
-
-
-            this.$el.html(this.template(this.model.toJSON()));
-            Backbone.Validation.bind(this);
-            return this;
         },
         previewLogo: function() {
 
@@ -63,7 +51,7 @@ define([
                 prevDiv.html('<div class="img" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>');
             }
         },
-        uploadLogo: function(e) {
+                uploadLogo: function(e) {
             e.preventDefault();
             $('#logo_file').focus().click();
 
@@ -75,7 +63,7 @@ define([
         },
         confirmCreate: function(e) {
             e.preventDefault();
-            var instance = this.$el.find('#create_private_service_form');
+            var instance = this.$el.find('#create_o2o_service_form');
             instance.parsley().validate();
 
 
@@ -92,7 +80,7 @@ define([
 
               //  var values = {};
 
-                var formData = new FormData($('#create_private_service_form')[0]);
+                var formData = new FormData($('#create_o2o_service_form')[0]);
 
                 // _.each($('#create_private_service_form').serializeArray(), function(input) {
 
@@ -108,7 +96,7 @@ define([
                 
               
                 $.ajax({
-                    url:'/api/services/privateServices',
+                    url:'/api/services/o2oServices',
                     type:'POST',
                     data:formData,
                     success:function(data){
@@ -135,12 +123,14 @@ define([
 
 
             }
+        },
+
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+    //        Backbone.Validation.bind(this);
+            return this;
         }
-
-
-
     });
 
-
-    return CreatePrivateServiceView;
+    return CreateO2oServiceView;
 });

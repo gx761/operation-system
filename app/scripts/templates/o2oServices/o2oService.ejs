@@ -1,0 +1,13 @@
+<div class="service_box_inner">
+    <button type="button" class="close">
+    <span >×</span>
+    </button>
+    <div class="service_title <%=status%>"><%=name%></div>
+    <div class="service_toggle">
+        <% if(status=='active'){%>
+        <a class='stop_service'>暂停服务</a>
+        <%} else if(status=='inactive'){%>
+        <a class='start_service'>启动服务</a>
+        <%}%>
+    </div>
+</div>

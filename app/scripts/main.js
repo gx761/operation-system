@@ -30,20 +30,18 @@ require.config({
 require([
     'backbone',
     'app',
-    'routes/loginRouter',
     'routes/indexRouter',
-    'routes/communityRouter',
     'models/SessionModel',
 
-], function(Backbone, app, LoginRouter, IndexRouter, CommunityRouter, SessionModel) {
+], function(Backbone, app, IndexRouter, SessionModel) {
     // Backbone.emulateHttp =true;
     app.session = new SessionModel({});
     app.router = new Backbone.Router();
 
 
- //   var loginRouter = new LoginRouter({});
+    //   var loginRouter = new LoginRouter({});
     var indexRouter = new IndexRouter({});
- //   var communityRouter = new CommunityRouter({});
+    //   var communityRouter = new CommunityRouter({});
 
 
 
@@ -91,11 +89,14 @@ require([
 
             // HTML5 pushState for URLs without hashbangs
             var hasPushstate = !!(window.history && history.pushState);
-            if (hasPushstate) Backbone.history.start({
-                pushState: false,
-                root: '/'
-            });
-            else Backbone.history.start();
+            if (hasPushstate) {
+                Backbone.history.start({
+                    pushState: false,
+                    root: '/'
+                });
+            } else {
+                Backbone.history.start();
+            }
 
         }
     });

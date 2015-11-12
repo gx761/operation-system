@@ -6,15 +6,65 @@ var moment = require('moment');
 var fs = require('fs');
 var formidable = require('formidable');
 var path = require('path');
-var mysql  =require('mysql');
+var mysql = require('mysql');
+var Q = require('q');
 
-function mysqlLog(sql,inserts){
-    var sqlString = mysql.format(sql, inserts);
-    console.log(sqlString);
+function mysqlLog(sql, inserts) {
+  var sqlString = mysql.format(sql, inserts);
+  console.log(sqlString);
 }
 
 function handleError(res, err) {
   return res.status(500).send(err);
+}
+
+function checkO2oServiceSuspendable(req, res, id) {
+  var deferred = Q.defer();
+  req.getConnection(function(err, connection) {
+    if (err) {
+      deferred.reject(err);
+    }
+    connection.query('select count(*) as numberOfCommunities from community_public_service where ? and status="active"', {
+      public_service_id: id
+    }, function(err, results) {
+      if (err) {
+        deferred.reject(err);
+      }
+      if (results[0].numberOfCommunities > 0) {
+        deferred.reject(results[0].numberOfCommunities);
+      } else {
+        deferred.resolve();
+      }
+    });
+
+  });
+  return deferred.promise;
+}
+
+
+
+function checkO2oServiceDeletable(req, res, id) {
+  var deferred = Q.defer();
+  req.getConnection(function(err, connection) {
+    if (err) {
+      deferred.reject(err);
+    }
+
+    connection.query('select count(*) as numberOfCommunities from community_public_service where ?', {
+      public_service_id: id
+    }, function(err, results) {
+      if (err) {
+        deferred.reject(err);
+      }
+      if (results[0].numberOfCommunities > 0) {
+        deferred.reject(results[0].numberOfCommunities);
+      } else {
+        deferred.resolve();
+      }
+    });
+
+  });
+  return deferred.promise;
 }
 
 exports.showPrivateServices = function(req, res) {
@@ -34,12 +84,18 @@ exports.showPrivateServices = function(req, res) {
   });
 
 };
-exports.showPublicServices = function(req, res) {
 
+
+exports.showPublicServices = function(req, res) {
   req.getConnection(function(err, connection) {
     if (err) {
       return handleError(res, err);
     }
+
+    mysqlLog('select t1.* from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id inner join dic_community as t3 on t2.community_id=t3.communitycode where ?', {
+      't3.community_id': req.params.id
+    });
+
     connection.query('select t1.* from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id inner join dic_community as t3 on t2.community_id=t3.communitycode where ?', {
       't3.community_id': req.params.id
     }, function(err, results) {
@@ -52,10 +108,26 @@ exports.showPublicServices = function(req, res) {
 
 };
 
+exports.showO2oServices = function(req, res) {
+  req.getConnection(function(err, connection) {
+    if (err) {
+      return handleError(res, err);
+    }
+
+    connection.query('select * from public_service ',
+      function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+        return res.status(200).json(results);
+      });
+  });
+
+};
+
 
 //Missing data validation
 exports.createPrivateService = function(req, res) {
-
 
   var form = new formidable.IncomingForm();
   form.encoding = 'utf-8';
@@ -77,7 +149,7 @@ exports.createPrivateService = function(req, res) {
           return handleError(res, new Error('file type is not supported'));
         } else {
           var oldPath = file.path,
-            newPath = 'uploads' + path.sep + Date.now() + file.name;
+            newPath = 'uploads'+path.sep+'private' + path.sep + Date.now() + file.name;
 
           fs.rename(oldPath, newPath, function() {
             console.log('file is saved');
@@ -110,11 +182,77 @@ exports.createPrivateService = function(req, res) {
                   });
 
                 }
-
               });
             });
+          });
+        }
+      });
+    } else {
+      return handleError(res, new Error('there is no file'));
+    }
+
+  });
+
+};
 
 
+
+//Missing data validation
+exports.createO2oService = function(req, res) {
+
+  var form = new formidable.IncomingForm();
+  form.encoding = 'utf-8';
+  form.uploadDir = 'tempUploads';
+  form.keepExtensions = false;
+
+  form.parse(req, function(err, fields, files) {
+
+    if (err) {
+      return handleError(res, err);
+    }
+
+    if (files) { //loop files, we only got one file
+      _.each(files, function(file) {
+        if (['image/jpeg', 'image/png'].indexOf(file.type) === -1) { //if it is not a file, delete and return.
+          fs.unlink(file.path, function() {
+            console.log('file is deleted');
+          });
+          return handleError(res, new Error('file type is not supported'));
+        } else {
+          var oldPath = file.path,
+            newPath = 'uploads'+path.sep+'public' + path.sep + Date.now() + file.name;
+
+          fs.rename(oldPath, newPath, function() {
+            console.log('file is saved');
+
+            var postData = fields;
+            postData.status = 'inactive';
+            postData.createoperator = req.user.id;
+            postData.modifyoperator = req.user.id;
+            postData.createtime = moment().format('YYYY-MM-DD HH:mm:ss');
+            postData.modifytime = moment().format('YYYY-MM-DD HH:mm:ss');
+            postData.logo_url = newPath;
+            req.getConnection(function(err, connection) {
+              if (err) {
+                return handleError(res, err);
+              }
+              connection.query('insert into public_service set ?', postData, function(err, results) {
+                if (err) {
+                  return handleError(res, err);
+                }
+                if (results.insertId) {
+
+                  connection.query('select * from public_service where ?', {
+                    id: results.insertId
+                  }, function(err, results) {
+                    if (err) {
+                      return handleError(res, err);
+                    }
+                    return res.status(201).json(results);
+                  });
+                }
+              });
+            });
           });
 
         }
@@ -129,70 +267,215 @@ exports.createPrivateService = function(req, res) {
 
 };
 
-exports.updatePrivateService=function(req,res){
 
-console.log(req.body);
 
-  if(!req.body){
-    return handleError(res,new Error('no body'));
+
+exports.updatePrivateService = function(req, res) {
+
+  console.log(req.body);
+
+  if (!req.body) {
+    return handleError(res, new Error('no body'));
   }
   var id = req.body.id;
 
-   req.body.createtime=moment(req.body.createtime).format('YYYY-MM-DD HH:mm:ss');
-   req.body.modifytime=moment().format('YYYY-MM-DD HH:mm:ss');
-   req.body.modifyoperator=req.user._id;
-   delete req.body.id;
+  req.body.createtime = moment(req.body.createtime).format('YYYY-MM-DD HH:mm:ss');
+  req.body.modifytime = moment().format('YYYY-MM-DD HH:mm:ss');
+  req.body.modifyoperator = req.user._id;
+  delete req.body.id;
 
-  req.getConnection(function(err,connection){
-    if(err){
-      return handleError(res,err);
+  req.getConnection(function(err, connection) {
+    if (err) {
+      return handleError(res, err);
     }
-
-    
-    connection.query('update private_service set ? where ?',[req.body,{'id':id}],function(err,results){
-      if(err){
-        return handleError(res,err);
+    connection.query('update private_service set ? where ?', [req.body, {
+      'id': id
+    }], function(err, results) {
+      if (err) {
+        return handleError(res, err);
       }
-       
-       console.log(results);
-       return res.status(200).json(results);
-
+      console.log(results);
+      return res.status(200).json(results);
     });
-
   });
-
-
-},
+};
 
 
 
 exports.deletePrivateService = function(req, res) {
 
   var serviceId = parseInt(req.params.id);
-  if (!_.isNumber(serviceId)||isNaN(serviceId)) {
-    return handleError(res,new Error('Id is invalid'));
+  if (!_.isNumber(serviceId) || isNaN(serviceId)) {
+    return handleError(res, new Error('Id is invalid'));
   }
 
 
-  req.getConnection(function(err,connection){
-    if(err){
-      return handleError(res,err);
+  req.getConnection(function(err, connection) {
+    if (err) {
+      return handleError(res, err);
     }
-    mysqlLog('delete  from private_service where ?',{id:serviceId});
-    connection.query('delete  from private_service where ?',{id:serviceId},function(err,results){
-      if(err){
-        return handleError(res,err);
+
+    connection.query('select logo_url from private_service where ?', {
+      id: serviceId
+    }, function(err, results) {
+      if (err) {
+        return handleError(res, err);
       }
-      return res.status(200).json(results);
+      var logoPath = results[0].logo_url;
+
+      fs.stat(logoPath, function(err, stats) {
+        if (err) {
+          console.log('file does not exist');
+        } else {
+
+          fs.unlink(logoPath, function(err) {
+            if (err) {
+              return handleError(res, err);
+            }
+          });
+        }
+      });
+
+      connection.query('delete  from private_service where ?', {
+        id: serviceId
+      }, function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+        return res.status(200).json(results);
+      });
+
+
 
     });
 
+
+
   });
 
-},
+};
+
+exports.updateO2oService = function(req, res) {
+
+
+  if (!req.body) {
+    return handleError(res, new Error('no body'));
+  }
+  var id = req.body.id;
+
+  req.body.createtime = moment(req.body.createtime).format('YYYY-MM-DD HH:mm:ss');
+  req.body.modifytime = moment().format('YYYY-MM-DD HH:mm:ss');
+  req.body.modifyoperator = req.user._id;
+  delete req.body.id;
+
+  if (req.body.status === 'active') {         //If activating the service, just activate it.
+    req.getConnection(function(err, connection) {
+      if (err) {
+        return handleError(res, err);
+      }
+      connection.query('update public_service set ? where ?', [req.body, {
+        'id': id
+      }], function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+        console.log(results);
+        return res.status(200).json(results);
+      });
+    });
+  } else {                      // if trying to disbale the service, check if any service is used.
+
+    checkO2oServiceSuspendable(req, res, id).then(function(value) {
+
+      req.getConnection(function(err, connection) {
+        if (err) {
+          return handleError(res, err);
+        }
+        connection.query('update public_service set ? where ?', [req.body, {
+          'id': id
+        }], function(err, results) {
+          if (err) {
+            return handleError(res, err);
+          }
+          console.log(results);
+          return res.status(200).json(results);
+        });
+      });
+
+
+    }, function(numberOfCommunities) {
+      res.status(500).json({
+        numberOfCommunities: numberOfCommunities
+      }); //return the how manay communitires are using the service
+
+    });
+
+
+  }
 
 
 
+};
+
+
+
+
+exports.deleteO2oService = function(req, res) {
+
+  var serviceId = parseInt(req.params.id);
+  if (!_.isNumber(serviceId) || isNaN(serviceId)) {
+    return handleError(res, new Error('Id is invalid'));
+  }
+
+  checkO2oServiceDeletable(req, res, serviceId).then(function(value) {
+
+    req.getConnection(function(err, connection) {
+      if (err) {
+        return handleError(res, err);
+      }
+
+      connection.query('select logo_url from public_service where ?', {
+        id: serviceId
+      }, function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+        var logoPath = results[0].logo_url;
+
+        fs.stat(logoPath, function(err, stats) {
+          if (err) {
+            console.log('file does not exist');
+          } else {
+            fs.unlink(logoPath, function(err) {
+              if (err) {
+                return handleError(res, err);
+              }
+            });
+          }
+        });
+
+        connection.query('delete  from public_service where ?', {
+          id: serviceId
+        }, function(err, results) {
+          if (err) {
+            return handleError(res, err);
+          }
+          return res.status(200).json(results);
+        });
+      });
+
+    });
+
+  }, function(numberOfCommunities) {
+    res.status(500).json({
+      numberOfCommunities: numberOfCommunities
+    }); //return the how manay communitires are using the service
+
+  });
+
+
+
+};
 
 
 
