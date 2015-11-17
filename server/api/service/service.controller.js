@@ -21,6 +21,30 @@ function handleError(res, err) {
 
 
 
+function findMaxOrder(req, res,comunity_id){
+    var deferred = Q.defer();
+  req.getConnection(function(err, connection) {
+    if (err) {
+      deferred.reject(err);
+    }
+
+    connection.query('select MAX(t1.order) from (select `order` from private_service where community_id=1 union select `order` from community_public_service where ? ) as t1', {
+      comunity_id: comunity_id
+    }, function(err, results) {
+      if (err) {
+        deferred.reject(err);
+      }
+      
+        deferred.resolve(results[0].order);
+    
+    });
+
+  });
+  return deferred.promise;
+
+}
+
+
 function checkO2oServiceDeletable(req, res, id) {
   var deferred = Q.defer();
   req.getConnection(function(err, connection) {
@@ -63,8 +87,6 @@ exports.showO2oServiceCommunties = function(req, res) {
     });
   });
 
-
-
 };
 
 
@@ -74,7 +96,7 @@ exports.showPublicServices = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
-    connection.query('  select t1.*,t3.community_id from public_service as t1 left join (select t1.id,t2.community_id from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id where ? ) as t3 on t1.id = t3.id where t1.status="active"', {
+    connection.query('select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile, t1.requester_name,t1.requester_mobile,t1.logo_url, case when t3.community_id is null then "inactive" else "active" end as status,t3.community_id,t3.order from public_service as t1 left join (select t1.id,t2.community_id,t2.order from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id where ? ) as t3 on t1.id = t3.id where t1.status="active"', {
       't2.community_id': req.params.communityId
     }, function(err, results) {
       if (err) {
@@ -86,18 +108,22 @@ exports.showPublicServices = function(req, res) {
 
 };
 
+/**
+ * Update public services of a community, please note the difference between O2O service and public serivce.
+ * @return Json     return the db manipulation result.
+ */
 exports.updatePublicService = function(req, res) {
 
   console.log(req.body);
 
-  if (req.body.disable) {
+  if (req.body.status==='inactive') {                                     //if trying to disable the public for a community, delete it from the community_public_service table
 
     req.getConnection(function(err, connection) {
       if (err) {
         return handleError(res, err);
       }
 
-      connection.query('delete from community_public_service where ? and ?', [{
+      connection.query('delete from community_public_service where ? and ?', [{           
         'public_service_id': req.body.id,
       }, {
         'community_id': req.body.community_id
@@ -109,13 +135,13 @@ exports.updatePublicService = function(req, res) {
       });
     });
 
-  } else if (!req.body.disable) {
+  } else if (req.body.status==='active') {
     req.getConnection(function(err, connection) {
       if (err) {
         return handleError(res, err);
       }
 
-      connection.query('select status from public_service where ?', {
+      connection.query('select status from public_service where ?', {       //if trying to enable it, check if it is globally enabled.
         id: req.body.id
       }, function(err, results) {
         if (err) {
@@ -158,7 +184,7 @@ exports.showPrivateServices = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
-    connection.query('select * from private_service where ?', {
+    connection.query('select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from private_service as t1 where ?', {
       'community_id': req.params.communityId
     }, function(err, results) {
       if (err) {
@@ -171,7 +197,10 @@ exports.showPrivateServices = function(req, res) {
 };
 
 
-
+/**
+ * List all O2O sevices
+ * @return json     return the list of all serivices.
+ */
 exports.showO2oServices = function(req, res) {
   req.getConnection(function(err, connection) {
     if (err) {
@@ -205,7 +234,7 @@ exports.createPrivateService = function(req, res) {
       return handleError(res, err);
     }
 
-    if (files) { //loop files, we only got one file
+    if (files) { //loop files, we only got one file, the files always exist.
       _.each(files, function(file) {
         if (['image/jpeg', 'image/png'].indexOf(file.type) === -1) { //if it is not a file, delete and return.
           fs.unlink(file.path, function() {
@@ -213,9 +242,9 @@ exports.createPrivateService = function(req, res) {
           });
           return handleError(res, new Error('file type is not supported'));
         } else {
-          var oldPath = file.path,
-            newWebPath = 'uploads' + path.sep + 'public' + path.sep + Date.now() + file.name,
-            newPath = 'app' + path.sep + newWebPath;
+          var oldPath = file.path,    
+            newWebPath = 'uploads' + path.sep + 'public' + path.sep + Date.now() + file.name,       //the relative file path on disk
+            newPath = 'app' + path.sep + newWebPath;        // the relative file path on web
 
           fs.rename(oldPath, newPath, function() {
             console.log('file is saved');
@@ -336,10 +365,120 @@ exports.createO2oService = function(req, res) {
 };
 
 
+function updatePrivateServiceDataAndReturn(req, res, data, id) {
+  req.getConnection(function(err, connection) {
+    if (err) {
+      return handleError(res, err);
+    }
+
+    connection.query('update private_service set ?', data, function(err, results) {
+      if (err) {
+        return handleError(res, err);
+      }
+
+      connection.query('select * from private_service where ?', {
+        id: id
+      }, function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+        return res.status(201).json(results);
+      });
+
+    });
+  });
+
+}
+
+function deletePrivateServiceImage(req, res, id) {
+  req.getConnection(function(err, connection) {
+    if (err) {
+      return handleError(res, err);
+    }
+
+    connection.query('select logo_url from private_service where ?', {
+      id: id
+    }, function(err, results) {
+      if (err) {
+        return handleError(res, err);
+      }
+
+      var logoPath = 'app/' + results[0].logo_url;
+
+      fs.stat(logoPath, function(err, stats) {
+        if (err) {
+          console.log('file does not exist');
+        } else {
+          fs.unlink(logoPath, function(err) {
+            if (err) {
+              return handleError(res, err);
+            }
+          });
+        }
+      });
+    });
+  });
+
+}
+
+
+
 
 exports.updatePrivateService = function(req, res) {
 
-  console.log(req.body);
+  var form = new formidable.IncomingForm();
+  form.encoding = 'utf-8';
+  form.uploadDir = 'app/tempUploads';
+  form.keepExtensions = false;
+
+  form.parse(req, function(err, fields, files) {
+    console.log(fields);
+
+    if (err) {
+      return handleError(res, err);
+    }
+
+    var id = req.params.id;
+    var postData = fields;
+    postData.modifyoperator = req.user.id;
+    postData.createtime = moment().format('YYYY-MM-DD HH:mm:ss');
+    postData.modifytime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+    if (files) { //loop files, we only got one file
+
+      _.each(files, function(file) {
+
+        if (file.size <= 0) {
+          updatePrivateServiceDataAndReturn(req, res, postData, id);
+        } else {
+
+          if (['image/jpeg', 'image/png'].indexOf(file.type) === -1) { //if it is not a file, delete and return.
+            fs.unlink(file.path, function() {
+              console.log('file is deleted');
+            });
+            return handleError(res, new Error('file type is not supported'));
+          } else {
+            var oldPath = file.path,
+              newWebPath = 'uploads' + path.sep + 'private' + path.sep + Date.now() + file.name,
+              newPath = 'app' + path.sep + newWebPath;
+
+            deletePrivateServiceImage(req, res, id);
+            fs.rename(oldPath, newPath, function() {
+              console.log('file is saved');
+              postData.logo_url = newWebPath;
+              updatePrivateServiceDataAndReturn(req, res, postData, id);
+            });
+          }
+        }
+      });
+    }
+  });
+
+
+};
+
+
+exports.togglePrivateService = function(req, res) {
 
   if (!req.body) {
     return handleError(res, new Error('no body'));
@@ -365,7 +504,9 @@ exports.updatePrivateService = function(req, res) {
       return res.status(200).json(results);
     });
   });
+
 };
+
 
 
 
@@ -412,11 +553,7 @@ exports.deletePrivateService = function(req, res) {
         return res.status(200).json(results);
       });
 
-
-
     });
-
-
 
   });
 
@@ -467,9 +604,6 @@ function updateO2oServiceData(req, res, data, id) {
 
 
 function updateO2oServiceDataAndReturn(req, res, data, id) {
-
-  console.log(data, id);
-
   req.getConnection(function(err, connection) {
     if (err) {
       return handleError(res, err);

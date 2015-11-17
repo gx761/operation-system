@@ -4,8 +4,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'templates'
-], function($, _, Backbone, JST) {
+    'templates',
+    'views/communityDetails/editPrivateServiceView'
+], function($, _, Backbone, JST, EditPrivateServiceView) {
     'use strict';
 
     var PrivateServiceView = Backbone.View.extend({
@@ -21,6 +22,7 @@ define([
             'click .stop_service': 'disbalePrivateService',
             'click .start_service': 'startPrivateService',
             'click .close': 'deletePrivateService',
+            'click .service_title': 'editPrivateServiceDetails'
         },
 
         initialize: function() {
@@ -28,10 +30,20 @@ define([
             this.listenTo(this.model, 'destroy', this.remove);
 
         },
+        editPrivateServiceDetails: function(e) {
+            e.preventDefault();
+            var editPrivateServiceView = new EditPrivateServiceView({
+                model: this.model
+            });
+            editPrivateServiceView.render().showModal();
+
+
+        },
         disbalePrivateService: function(e) {
             e.preventDefault();
             var returnValue = window.confirm('请确认是否要暂停该服务?');
             if (returnValue === true) {
+                this.model.urlRoot = 'api/services/togglePrivateService';
                 this.model.set('status', 'inactive');
                 this.model.save({}, {
                     parse: false
@@ -44,6 +56,7 @@ define([
             e.preventDefault();
             var returnValue = window.confirm('请确认是否要启动该服务?');
             if (returnValue === true) {
+                this.model.urlRoot = 'api/services/togglePrivateService';
                 this.model.set('status', 'active');
                 this.model.save({}, {
                     parse: false
@@ -64,6 +77,7 @@ define([
             var returnValue = window.confirm('请确认是否要删除该服务?');
             if (returnValue === true) {
                 // this.model.set('status','active');
+                this.model.urlRoot = 'api/services/privateServices';
                 this.model.destroy({
                     wait: true
                 });

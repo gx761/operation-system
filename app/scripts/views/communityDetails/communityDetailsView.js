@@ -24,12 +24,29 @@ define([
 
         className: 'communityDetails',
 
-        events: {},
+        events: {
+            'click .show_service_order':'showServiceOrder'
+        },
 
         initialize: function(options) {
             //      this.listenTo(this.model, 'change', this.render);
             this.communityId = options.communityId;
         },
+
+        showServiceOrder:function(){
+
+            
+            
+            var arr1= [];
+            var enabledPrivateServices = this.privateServiceCollection.where({status:'active'});
+            var enabledPublicServices = this.publicServicesCollection.where({status:'active'});
+
+            var serviceCollection=arr1.concat(enabledPrivateServices,enabledPublicServices);
+
+            console.log(serviceCollection);
+
+        },
+
         populateHeader: function() {
             var mcompanyModel,
                 commmunityHeader;
@@ -50,17 +67,17 @@ define([
             var privateServiceCollection,
                 privateServicesView;
 
-            privateServiceCollection = new PrivateServiceCollection({});
+            this.privateServiceCollection = new PrivateServiceCollection({});
 
-            privateServiceCollection.url = '/api/services/privateServices/' + this.communityId;
+            this.privateServiceCollection.url = '/api/services/privateServices/' + this.communityId;
 
             privateServicesView = new PrivateServicesView({
                 el: '#private_services',
-                collection: privateServiceCollection,
+                collection: this.privateServiceCollection,
                 communityId: this.communityId
             });
 
-            privateServiceCollection.fetch({
+            this.privateServiceCollection.fetch({
                 reset: true
             });
         },
@@ -68,16 +85,16 @@ define([
         populatePublicServices: function() {
             var publicServicesCollection,
                 publicServicesView;
-            publicServicesCollection = new PublicServiceCollection({});
-            publicServicesCollection.url = '/api/services/publicServices/' + this.communityId;
+            this.publicServicesCollection = new PublicServiceCollection({});
+            this.publicServicesCollection.url = '/api/services/publicServices/' + this.communityId;
 
             publicServicesView = new PublicServicesView({
                 el:'#public_services',
-                collection:publicServicesCollection,
+                collection:this.publicServicesCollection,
                 communityId:this.communityId
             });
 
-            publicServicesCollection.fetch({
+            this.publicServicesCollection.fetch({
                 reset:true
             });
 

@@ -50,7 +50,7 @@ define([
                 delete this.headerView;
             }
 
-            this.show(new LoginView({}));
+            this.show(new LoginView({}),{withSidebar:false});
         },
 
         index: function() {
@@ -96,6 +96,12 @@ define([
 
                 document.getElementsByTagName('body')[0].insertBefore(content, document.getElementById('side_bar'));
             }
+
+            if (typeof options.withSidebar!=='undefined'&& options.withSidebar===false) {
+                    document.getElementById('content').setAttribute('class', 'container-fluid');
+                } 
+
+
 
             // Establish the requested view into scope
             this.currentView = view;

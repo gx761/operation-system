@@ -17,6 +17,7 @@ router.get('/privateServices/:communityId', controller.showPrivateServices);
 router.post('/privateServices', auth.hasRole('admin'), controller.createPrivateService);
 router.put('/privateServices/:id', auth.hasRole('admin'),controller.updatePrivateService);
 router.delete('/privateServices/:id', auth.hasRole('admin'), controller.deletePrivateService);
+router.put('/togglePrivateService/:id', auth.hasRole('admin'),controller.togglePrivateService);
 
 
 

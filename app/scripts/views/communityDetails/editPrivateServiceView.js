@@ -4,45 +4,34 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'js-cookie',
-    'templates',
-    'BackboneValidation',
-    'views/modalDialogView'
-
-], function($, _, Backbone, Cookies, JST) {
+    'templates'
+], function($, _, Backbone, JST) {
     'use strict';
 
-    var CreatePrivateServiceView = Backbone.ModalView.extend({
-        template: JST['app/scripts/templates/communityDetails/createPrivateService.ejs'],
+    var EditPrivateServiceView = Backbone.ModalView.extend({
+        template: JST['app/scripts/templates/communityDetails/editPrivateService.ejs'],
 
         events: {
-            'click #cancel_create': 'cancelCreate',
-            'click #confirm_create': 'confirmCreate',
+            'click #cancel_edit': 'cancelEdit',
+            'click #confirm_edit': 'confirmEdit',
             'click #add-logo-button': 'uploadLogo',
             'change #logo_file': 'previewLogo'
-
         },
 
-        initialize: function(options) {
-            //        this.listenTo(this.model, 'change', this.render);
-            _.bind(this.hideModal, this);
-            //    this.collection = options.collection;
+        initialize: function() {
+            _.bindAll(this);
+            this.listenTo(this.model, 'change', this.render);
         },
 
         render: function() {
+            console.log(this.model);
             this.$el.html(this.template(this.model.toJSON()));
-            //         Backbone.Validation.bind(this);
             return this;
         },
         previewLogo: function() {
 
             var prevDiv = $('.logo-box-image');
             var file = $('#logo_file')[0];
-            if (!file.files[0]) {
-                prevDiv.html('');
-                return false;
-            }
-
 
             if (file.files[0].type !== 'image/jpeg' && file.files[0].type !== 'image/png') {
                 file.files = [];
@@ -71,14 +60,13 @@ define([
             $('#logo_file').focus().click();
 
         },
-
-        cancelCreate: function(e) {
+        cancelEdit: function(e) {
             e.preventDefault();
             this.hideModal();
         },
-        confirmCreate: function(e) {
+        confirmEdit: function(e) {
             e.preventDefault();
-            var instance = this.$el.find('#create_private_service_form');
+            var instance = this.$el.find('#edit_private_service_form');
             instance.parsley().validate();
 
             if (instance.parsley().isValid()) {
@@ -90,9 +78,9 @@ define([
                 // this.model.set('gpslat', $('#gpslat').val());
                 // this.model.validate();
 
-              //  var values = {};
+                //  var values = {};
 
-                var formData = new FormData($('#create_private_service_form')[0]);
+                var formData = new FormData($('#edit_private_service_form')[0]);
 
                 // _.each($('#create_private_service_form').serializeArray(), function(input) {
 
@@ -102,15 +90,14 @@ define([
 
                 var self = this;
                 $.ajax({
-                    url: '/api/services/privateServices',
-                    type: 'POST',
+                    url: '/api/services/privateServices/' + self.model.id,
+                    type: 'PUT',
                     data: formData,
                     success: function(data) {
                         if (data.length > 0) {
                             self.model.set(data[0]);
-                            self.collection.add(self.model);
                             self.hideModal();
-                            self.showNotification('服务添加成功');
+                            self.showNotification('服务修改成功');
                         }
 
 
@@ -129,6 +116,5 @@ define([
 
     });
 
-
-    return CreatePrivateServiceView;
+    return EditPrivateServiceView;
 });

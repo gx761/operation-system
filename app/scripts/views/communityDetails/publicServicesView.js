@@ -38,10 +38,7 @@ define([
                     return 'inactive';
                 }
             });
-             console.log(numbers);
         
-
-
             this.$el.html(this.template(numbers));
             return this;
         },

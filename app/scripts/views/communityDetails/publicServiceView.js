@@ -25,13 +25,10 @@ define([
             e.preventDefault();
             var returnValue = window.confirm('请确认是否要暂停该服务?');
             if (returnValue === true) {
-                this.model.set('disable',true);
+                this.model.set('status','inactive');
                 this.model.save({}, {
                     parse: false,
-                    wait:true,
-                    success:function(model, response, options){
-                        model.set('community_id',null);
-                    }
+                    wait:true
                 });
             } else {
                 return;
@@ -41,11 +38,9 @@ define([
         startPublicService: function(e) {
             e.preventDefault();
             var returnValue = window.confirm('请确认是否要启动该服务?');
-            console.log(this.communityId);
-
 
             if (returnValue === true) {
-                 this.model.set('disable',false);
+                 this.model.set('status','active');
                 this.model.set('community_id', parseInt(this.communityId));
                 this.model.save({}, {
                     parse: false
@@ -58,7 +53,6 @@ define([
         initialize: function(options) {
             _.bindAll(this);
 
-            console.log(this.model);
             this.communityId = options.communityId;
 
             this.listenTo(this.model, 'change', this.render);
