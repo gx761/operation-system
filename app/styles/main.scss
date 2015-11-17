@@ -3,6 +3,8 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/bootstr
 @import 'bootstrap-sass-official/assets/stylesheets/bootstrap.scss';
 @import "views/community_search.scss";
 @import "views/service_management.scss";
+@import "views/o2o_service_management.scss";
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
@@ -109,8 +111,7 @@ body {
 
 .full-wrapper{
     position:absolute;
-    height:100%;
-    width:100%;
+        left: 39%;
 }
 .float-alert{
     z-index:9999;

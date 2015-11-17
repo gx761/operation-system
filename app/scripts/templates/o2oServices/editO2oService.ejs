@@ -1,0 +1,69 @@
+<form action="" class="form-horizontal modal_form" id="edit_o2o_service_form" enctype="multipart/form-data" novalidate="noValidate" data-parsley-validate,data-parsley-ui-enabled="true">
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="logo-box">
+                <div class="logo-box-image">
+                    <img src="<%=logo_url%>" alt="">
+                </div>
+                <div class="add-logo">
+                    <input type="file" id="logo_file"  name="logo_file" accept="image/*">
+                    <button class="btn btn-primary btn-block" id="add-logo-button">修改logo图</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-9">
+            
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <input type="text" class="form-control" required name="name"  id="service_name" value="<%=name%>" placeholder="请输入名称">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-xs-7">
+                    <input type="url" class="form-control" required name="url" id="url" placeholder="请输入服务网址" value="<%=url%>">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-5">
+                    <select name="service_type_id" id="service_type_id" required class="form-control" ="service_type">
+                        <option value="">服务类型</option>
+                        <option value="1" <%=service_type_id==1?'selected':''%>  >O2O</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12"><input type="text" class="form-control" name ="note" id="service_note" placeholder="请输入备注" value="<%=note%>"></div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <input type="text" class="form-control" name="charger_name" required id="charger_name" placeholder="请输入我方负责人姓名" value="<%=charger_name%>">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <input type="text" class="form-control" name="charger_mobile" required id="charger_mobile" placeholder="请输入我方负责人电话" value="<%=charger_mobile%>">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <input type="text" class="form-control" name="requester_name" required id="requester_name" placeholder="请输入对方负责人姓名" value="<%=requester_name%>">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <input type="text" class="form-control" name="requester_mobile" required id="requester_mobile" placeholder="请输入对方负责人电话" value="<%=requester_mobile%>">
+        </div>
+    </div>
+    
+    
+    <div class="form-group">
+        <div class="col-xs-12">
+            <button class="btn btn-primary" type="submit" id="confirm_edit">确定修改</button>
+            <button class="btn btn-default" type="submit" id="cancel_edit">取消修改</button>
+        </div>
+        
+    </form>

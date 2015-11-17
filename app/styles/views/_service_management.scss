@@ -60,7 +60,6 @@
 	text-align:center;
 	display:inline-block;
 	vertical-align: middle;
-	width: 100%;
 	 font-size:(12rem/10);
 }
 .service_toggle{
@@ -79,13 +78,28 @@
 	height:120px;
 	width: 120px;
 	border:1px solid grey;
+        margin: 0 auto;
 	img{
 		max-width:100%;
 		max-height:100%;
 	}
 }
+.add-logo{
+    width:120px;
+        margin: 0 auto;
+}
 
 #logo_file{
 	    position: absolute;
     left: -9999px;
+}
+
+
+
+#edit_o2o_service_form{
+    
+    .form-group{
+        margin-bottom:10px;
+    }
+
 }

@@ -4,40 +4,49 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'templates',
-    'views/modalDialogView'
+    'templates'
 ], function($, _, Backbone, JST) {
     'use strict';
 
-    var CreateO2oServiceView = Backbone.ModalView.extend({
-        template: JST['app/scripts/templates/o2oServices/createO2oService.ejs'],
+    var EditO2oServiceView = Backbone.View.extend({
+        template: JST['app/scripts/templates/o2oServices/editO2oService.ejs'],
+
 
         events: {
-            'click #cancel_create': 'cancelCreate',
-            'click #confirm_create': 'confirmCreate',
+            'click #cancel_edit': 'cancelEdit',
+            'click #confirm_edit': 'confirmEdit',
             'click #add-logo-button': 'uploadLogo',
             'change #logo_file': 'previewLogo'
         },
 
-        initialize: function(options) {
+        initialize: function() {
             //        this.listenTo(this.model, 'change', this.render);
-            _.bind(this.hideModal, this);
-            this.collection = options.collection;
+            _.bindAll(this);
         },
-        previewLogo: function() {
+
+        render: function() {
+            console.log(this.model);
+
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        },
+        cancelEdit: function(e) {
+            e.preventDefault();
+            this.parentView.hideModal();
+        },
+        previewLogo: function(e) {
+            e.preventDefault();
 
             var prevDiv = $('.logo-box-image');
             var file = $('#logo_file')[0];
 
-            if(!file.files[0]){
+            if (!file.files[0]) {
                 prevDiv.html('');
                 return false;
             }
 
-
             if (file.files[0].type !== 'image/jpeg' && file.files[0].type !== 'image/png') {
                 file.files = [];
-
 
                 if (file.outerHTML) {
                     file.outerHTML = file.outerHTML;
@@ -63,13 +72,9 @@ define([
 
         },
 
-        cancelCreate: function(e) {
+        confirmEdit: function(e) {
             e.preventDefault();
-            this.hideModal();
-        },
-        confirmCreate: function(e) {
-            e.preventDefault();
-            var instance = this.$el.find('#create_o2o_service_form');
+            var instance = this.$el.find('#edit_o2o_service_form');
             instance.parsley().validate();
 
             if (instance.parsley().isValid()) {
@@ -84,7 +89,7 @@ define([
 
                 //  var values = {};
 
-                var formData = new FormData($('#create_o2o_service_form')[0]);
+                var formData = new FormData($('#edit_o2o_service_form')[0]);
 
                 // _.each($('#create_private_service_form').serializeArray(), function(input) {
 
@@ -96,15 +101,14 @@ define([
                 var self = this;
 
                 $.ajax({
-                    url: '/api/services/o2oServices',
-                    type: 'POST',
+                    url: '/api/services/o2oServices/' + self.model.get('id'),
+                    type: 'PUT',
                     data: formData,
                     success: function(data) {
                         if (data.length > 0) {
                             self.model.set(data[0]);
-                            self.collection.add(self.model);
-                            self.hideModal();
-                            self.showNotification('服务添加成功');
+                            self.parentView.hideModal();
+                            self.parentView.showNotification('服务修改成功');
                         }
 
 
@@ -118,14 +122,12 @@ define([
 
                 });
             }
-        },
 
-        render: function() {
-            this.$el.html(this.template(this.model.toJSON()));
-            //        Backbone.Validation.bind(this);
-            return this;
         }
+
+
+
     });
 
-    return CreateO2oServiceView;
+    return EditO2oServiceView;
 });

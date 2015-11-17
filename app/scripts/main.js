@@ -12,18 +12,22 @@ require.config({
         },
         'js-cookie': {
             exports: 'Cookies'
+        },
+        'backgrid':{
+            deps:['jquery','underscore','backbone'],
+            exports:'Backgrid'
         }
 
     },
     paths: {
-        jquery: '../bower_components/jquery/dist/jquery',
+        jquery: '../bower_components/jquery/jquery',
         backbone: '../bower_components/backbone/backbone',
         underscore: '../bower_components/lodash/dist/lodash',
         bootstrap: '../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap',
         parsley: '../bower_components/parsleyjs/dist/parsley',
         'js-cookie': '../bower_components/js-cookie/src/js.cookie',
-        'BackboneValidation': '../bower_components/backbone-validation/dist/backbone-validation-amd',
-        'jquery.iframe-transport': '../bower_components/jquery.iframe-transport/jquery.iframe-transport'
+        'backgrid': '../bower_components/backgrid/lib/backgrid',
+        'BackboneValidation': '../bower_components/backbone-validation/dist/backbone-validation-amd'
     }
 });
 

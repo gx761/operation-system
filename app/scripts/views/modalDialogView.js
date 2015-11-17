@@ -33,29 +33,31 @@ define([
         showModal: function() {
 
             this.backdrop = $('<div class="modal-backdrop fade"></div>');
-            $('body').append(this.$el);
 
+            $('body').append(this.$el);
             $('body').append(this.backdrop);
 
             this.$el.show();
+            var self =this;
 
             setTimeout(function(){
-                  this.$el.addClass('in');
-            this.backdrop.addClass('in');
+                  self.$el.addClass('in');
+            self.backdrop.addClass('in');
 
-            }.bind(this), 150);
+            }, 150);
 
             $(document.body).on('keyup',this.keyUp.bind(this));
             return this;
         },
         hideModal: function() {
+            var self=this;
 
             this.$el.removeClass('in');
             this.backdrop.removeClass('in');
             setTimeout(function(){
-                this.$el.remove();
-                this.backdrop.remove();
-            }.bind(this), 150);
+                self.$el.remove();
+                self.backdrop.remove();
+            }, 150);
 
             $(document.body).off('keyup',this.keyUp.bind(this));
             this.$el.off('click');
@@ -75,11 +77,11 @@ define([
             var notification=$('<div class="full-wrapper"><div class="alert alert-success float-alert">'+message+'</div></div>');
             notification.appendTo($('body'));
          
-            setTimeout(function(){
-                notification.fadeOut('fast', function() {
-                    notification.remove();
-                });
-            }, 3000);
+            // setTimeout(function(){
+            //     notification.fadeOut('fast', function() {
+            //         notification.remove();
+            //     });
+            // }, 3000);
 
         }
 

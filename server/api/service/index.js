@@ -24,7 +24,12 @@ router.delete('/privateServices/:id', auth.hasRole('admin'), controller.deletePr
 
 router.post('/o2oServices', auth.hasRole('admin'), controller.createO2oService);
 router.get('/o2oServices', controller.showO2oServices);
+router.get('/o2oServices/:id/communities', controller.showO2oServiceCommunties);
+
 router.put('/o2oServices/:id', auth.hasRole('admin'),controller.updateO2oService);
+
+router.put('/toggleO2oService/:id', auth.hasRole('admin'),controller.toggleO2oService);
+
 router.delete('/o2oServices/:id', auth.hasRole('admin'), controller.deleteO2oService);
 
 

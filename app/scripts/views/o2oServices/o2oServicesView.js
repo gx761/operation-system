@@ -57,10 +57,9 @@ define([
         },
         addOne: function(o2oService) {
 
-            console.log(o2oService);
-
+ 
             var o2oServiceView = new O2oServiceView({
-                model: o2oService
+                model: o2oService,
             });
 
             this.o2oServiceViews.push(o2oServiceView);

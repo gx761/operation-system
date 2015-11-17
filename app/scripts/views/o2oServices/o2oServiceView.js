@@ -4,8 +4,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'templates'
-], function($, _, Backbone, JST) {
+    'templates',
+    'collections/communitySearch/communityCollection',
+    'views/o2oServices/o2oServiceDetailsView'
+], function($, _, Backbone, JST,CommunityCollection,O2oServiceDetailsView) {
     'use strict';
 
     var O2oServiceView = Backbone.View.extend({
@@ -21,16 +23,18 @@ define([
             'click .stop_service': 'disbaleO2oService',
             'click .start_service': 'startO2oService',
             'click .close': 'deleteO2oService',
+            'click .service_title':'showO2oServiceDetails'
         },
         disbaleO2oService: function(e) {
             e.preventDefault();
             var returnValue = window.confirm('请确认是否要暂停该服务?');
             if (returnValue === true) {
-                this.model.urlRoot = 'api/services/o2oServices';
-                this.model.save({status:'inactive'},{
+                this.model.urlRoot = 'api/services/toggleO2oService';
+                this.model.save({
+                    status: 'inactive'
+                }, {
                     wait: true,
-                    success: function(model, response, options) {
-                    },
+                    success: function(model, response, options) {},
                     error: function(model, response, options) {
                         window.alert('无法暂停该服务, 有' + response.responseJSON.numberOfCommunities + '个小区正在使用该服务');
                     },
@@ -44,8 +48,10 @@ define([
             e.preventDefault();
             var returnValue = window.confirm('请确认是否要启动该服务?');
             if (returnValue === true) {
-                this.model.urlRoot = 'api/services/o2oServices';
-                this.model.save({status:'active'},{
+                this.model.urlRoot = 'api/services/toggleO2oService';
+                this.model.save({
+                    status: 'active'
+                }, {
                     wait: true,
                     parse: false
                 });
@@ -78,15 +84,27 @@ define([
                 return;
             }
         },
+        showO2oServiceDetails: function(e) {
+
+            e.preventDefault();
+
+            var view = new O2oServiceDetailsView({
+                model:  this.model,
+                communityId:this.communityId
+            });
+            view.render();
+           
+
+        },
 
         initialize: function() {
+
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
         },
 
 
         render: function() {
-
 
             this.$el.html(this.template(this.model.toJSON()));
 
