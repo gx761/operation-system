@@ -11,6 +11,7 @@ define([
         urlRoot: 'api/services/privateServices',
 
         initialize: function() {
+            this.type='private';
         },
 
         defaults: {

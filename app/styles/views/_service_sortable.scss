@@ -1,0 +1,22 @@
+.sortable-view{
+    padding:10px;
+    @include clearfix();
+
+    .sortable-item{
+        float:left;
+        height:120px;
+        width:120px;
+        border:1px solid grey;
+        &.over{
+            border:1px solid red;
+        }
+
+    }
+    .box_placeholder{
+        float:left;
+         height:120px;
+        width:120px;
+        border:1px solid red;
+    }
+}
+

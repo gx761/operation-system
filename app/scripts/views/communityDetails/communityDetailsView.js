@@ -6,7 +6,7 @@ define([
     'backbone',
     'templates',
     'views/communityDetails/communityHeaderView',
-    'views/communityDetails/servicesView',
+    'views/communityDetails/sortServicesView',
     'models/communityDetails/mcompanyModel',
     'collections/communityDetails/privateServiceCollection',
     'collections/communityDetails/publicServiceCollection',
@@ -14,7 +14,7 @@ define([
     'views/communityDetails/privateServicesView',
     'views/communityDetails/publicServicesView',
 
-], function($, _, Backbone, JST, CommunityHeaderView, ServicesView, McompanyModel, PrivateServiceCollection, PublicServiceCollection, PrivateServicesView, PublicServicesView) {
+], function($, _, Backbone, JST, CommunityHeaderView, SortServicesView, McompanyModel, PrivateServiceCollection, PublicServiceCollection, PrivateServicesView, PublicServicesView) {
     'use strict';
 
     var CommunityDetailsView = Backbone.View.extend({
@@ -34,16 +34,25 @@ define([
         },
 
         showServiceOrder:function(){
-
-            
-            
             var arr1= [];
             var enabledPrivateServices = this.privateServiceCollection.where({status:'active'});
             var enabledPublicServices = this.publicServicesCollection.where({status:'active'});
 
-            var serviceCollection=arr1.concat(enabledPrivateServices,enabledPublicServices);
+            var serviceArray=arr1.concat(enabledPrivateServices,enabledPublicServices);
+            var serviceCollection =new Backbone.Collection({
+                model:Backbone.Model
+            });
 
-            console.log(serviceCollection);
+            serviceCollection.set(serviceArray);
+
+            var sortServicesView = new SortServicesView({
+                collection:serviceCollection
+            });
+
+            sortServicesView.render();
+            serviceCollection.trigger('reset');
+            sortServicesView.showModal();
+
 
         },
 

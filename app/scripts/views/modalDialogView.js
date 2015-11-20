@@ -77,11 +77,11 @@ define([
             var notification=$('<div class="full-wrapper"><div class="alert alert-success float-alert">'+message+'</div></div>');
             notification.appendTo($('body'));
          
-            // setTimeout(function(){
-            //     notification.fadeOut('fast', function() {
-            //         notification.remove();
-            //     });
-            // }, 3000);
+            setTimeout(function(){
+                notification.fadeOut('fast', function() {
+                    notification.remove();
+                });
+            }, 3000);
 
         }
 

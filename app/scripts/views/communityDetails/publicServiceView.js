@@ -43,7 +43,7 @@ define([
                  this.model.set('status','active');
                 this.model.set('community_id', parseInt(this.communityId));
                 this.model.save({}, {
-                    parse: false
+                    parse: true
                 });
             } else {
                 return;

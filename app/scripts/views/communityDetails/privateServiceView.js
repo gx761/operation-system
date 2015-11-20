@@ -46,7 +46,7 @@ define([
                 this.model.urlRoot = 'api/services/togglePrivateService';
                 this.model.set('status', 'inactive');
                 this.model.save({}, {
-                    parse: false
+                    parse: true
                 });
             } else {
                 return;
@@ -59,7 +59,7 @@ define([
                 this.model.urlRoot = 'api/services/togglePrivateService';
                 this.model.set('status', 'active');
                 this.model.save({}, {
-                    parse: false
+                    parse: true
                 });
             } else {
                 return;

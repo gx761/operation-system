@@ -9,7 +9,9 @@ define([
     var PublicServiceModel = Backbone.Model.extend({
         urlRoot: 'api/services/publicServices',
 
-        initialize: function() {},
+        initialize: function() {
+              this.type='public';
+        },
 
         defaults: {},
 

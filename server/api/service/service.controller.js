@@ -9,6 +9,7 @@ var path = require('path');
 var mysql = require('mysql');
 var Q = require('q');
 var path = require('path');
+var async = require('async');
 
 function mysqlLog(sql, inserts) {
   var sqlString = mysql.format(sql, inserts);
@@ -21,22 +22,28 @@ function handleError(res, err) {
 
 
 
-function findMaxOrder(req, res,comunity_id){
-    var deferred = Q.defer();
+function findMaxOrder(req, res, community_id) {
+  var deferred = Q.defer();
   req.getConnection(function(err, connection) {
     if (err) {
       deferred.reject(err);
     }
 
-    connection.query('select MAX(t1.order) from (select `order` from private_service where community_id=1 union select `order` from community_public_service where ? ) as t1', {
-      comunity_id: comunity_id
-    }, function(err, results) {
+    connection.query('select MAX(t1.order) as `order`  from (select `order` from private_service where ? union select `order` from community_public_service where ? ) as t1', [{
+      community_id: community_id,
+    }, {
+      community_id: community_id
+    }], function(err, results) {
       if (err) {
         deferred.reject(err);
       }
-      
+      if(results[0].order===null){
+        deferred.resolve(0);
+      }else{
         deferred.resolve(results[0].order);
-    
+      }
+      
+
     });
 
   });
@@ -68,6 +75,123 @@ function checkO2oServiceDeletable(req, res, id) {
   });
   return deferred.promise;
 }
+
+
+function updatePrivateServices(req, res, privateServices, callback) {
+  req.getConnection(function(err, connection) {
+    if (err) {
+      callback(err);
+    }
+    connection.beginTransaction(function(err) {
+      if (err) {
+        callback(err);
+      }
+
+      (function updatePrivateServiceIn() {
+
+        var privateService = privateServices.pop();
+        connection.query(' update private_service set ? where ?', [{
+          'order': privateService.order
+        }, {
+          'id': privateService.id
+        }], function(err, results) {
+          if (err) {
+            return connection.rollback(function() {
+              callback(err);
+            });
+          }
+          if (privateServices.length > 0) {
+            updatePrivateServiceIn();
+          } else {
+
+            connection.commit(function(err) {
+              if (err) {
+                return connection.rollback(function() {
+                  callback(err);
+                });
+              }
+
+              callback(null, 'success');
+              //  return res.status(200).send('update success');
+            });
+          }
+
+        });
+      })();
+    });
+  });
+}
+
+function updatePublicServices(req, res, publicServices, callback) {
+  req.getConnection(function(err, connection) {
+    if (err) {
+      return handleError(res, err);
+    }
+    connection.beginTransaction(function(err) {
+      if (err) {
+        callback(err);
+      }
+      (function updatePublicServiceIn() {
+
+        var publicService = publicServices.pop();
+        connection.query(' update community_public_service set ? where ? and ?', [{
+          'order': publicService.order
+        }, {
+          'public_service_id': publicService.id,
+        }, {
+          'community_id': publicService.community_id
+        }], function(err, results) {
+          if (err) {
+            return connection.rollback(function() {
+              callback(err);
+            });
+          }
+          if (publicServices.length > 0) {
+            updatePublicServiceIn();
+          } else {
+
+            connection.commit(function(err) {
+              if (err) {
+                return connection.rollback(function() {
+                  callback(err);
+                });
+              }
+              callback(null, 'success');
+              //  return res.status(200).send('update success');
+            });
+          }
+
+        });
+      })();
+    });
+  });
+}
+
+
+
+exports.orderService = function(req, res) {
+  var data = req.body;
+  var privateServices = data.privateServiceData;
+  var publicServices = data.publicServiceData;
+
+  async.series([
+    function(callback) {
+      updatePublicServices(req, res, publicServices, callback);
+    },
+    function(callback) {
+      updatePrivateServices(req, res, privateServices, callback);
+    },
+
+  ], function(err, result) {
+    if (err) {
+      return handleError(res, err);
+    }
+    return res.status(200).send('update success');
+
+
+  });
+
+};
 
 
 exports.showO2oServiceCommunties = function(req, res) {
@@ -108,22 +232,46 @@ exports.showPublicServices = function(req, res) {
 
 };
 
+
+function returnPublicService(req, res, public_service_id, community_id) {
+
+
+  req.getConnection(function(err, connection) {
+    if (err) {
+      return handleError(res, err);
+    }
+
+
+    connection.query('select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile, t1.requester_name,t1.requester_mobile,t1.logo_url, case when t3.community_id is null then "inactive" else "active" end as status, t3.community_id,t3.order from public_service as t1 inner join (select t1.id,t2.community_id,t2.order from public_service as t1 inner join community_public_service as t2 on t1.id=t2.public_service_id where ? and ? ) as t3 on t1.id = t3.id where t1.status="active"', [{
+      't2.community_id': community_id,
+    }, {
+      't2.public_service_id': public_service_id,
+    }], function(err, results) {
+      if (err) {
+        return handleError(res, err);
+      }
+
+      return res.status(200).json(results[0]);
+    });
+  });
+
+}
+
+
 /**
  * Update public services of a community, please note the difference between O2O service and public serivce.
  * @return Json     return the db manipulation result.
  */
 exports.updatePublicService = function(req, res) {
 
-  console.log(req.body);
-
-  if (req.body.status==='inactive') {                                     //if trying to disable the public for a community, delete it from the community_public_service table
+  if (req.body.status === 'inactive') { //if trying to disable the public for a community, delete it from the community_public_service table
 
     req.getConnection(function(err, connection) {
       if (err) {
         return handleError(res, err);
       }
 
-      connection.query('delete from community_public_service where ? and ?', [{           
+      connection.query('delete from community_public_service where ? and ?', [{
         'public_service_id': req.body.id,
       }, {
         'community_id': req.body.community_id
@@ -135,13 +283,13 @@ exports.updatePublicService = function(req, res) {
       });
     });
 
-  } else if (req.body.status==='active') {
+  } else if (req.body.status === 'active') {
     req.getConnection(function(err, connection) {
       if (err) {
         return handleError(res, err);
       }
 
-      connection.query('select status from public_service where ?', {       //if trying to enable it, check if it is globally enabled.
+      connection.query('select status from public_service where ?', { //if trying to enable it, check if it is globally enabled.
         id: req.body.id
       }, function(err, results) {
         if (err) {
@@ -152,18 +300,23 @@ exports.updatePublicService = function(req, res) {
           return handleError(res, new Error('this service is not avaliable'));
         }
 
+        findMaxOrder(req, res, req.body.community_id).then(function(value) {
 
-        connection.query('insert into community_public_service  set ?', {
-          'public_service_id': req.body.id,
-          'community_id': req.body.community_id
-        }, function(err, results) {
-          if (err) {
-            return handleError(res, err);
-          }
-          return res.status(200).json(results);
+          connection.query('insert into community_public_service  set ?', {
+            'public_service_id': req.body.id,
+            'community_id': req.body.community_id,
+            'order': parseInt(value) + 1
+          }, function(err, results) {
+            if (err) {
+              return handleError(res, err);
+            }
+
+            if (results.affectedRows) {
+              returnPublicService(req, res, req.body.id, req.body.community_id);
+            }
+          });
+
         });
-
-
       });
 
 
@@ -184,7 +337,7 @@ exports.showPrivateServices = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
-    connection.query('select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from private_service as t1 where ?', {
+    connection.query('select t1.id,t1.community_id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from private_service as t1 where ?', {
       'community_id': req.params.communityId
     }, function(err, results) {
       if (err) {
@@ -222,7 +375,6 @@ exports.showO2oServices = function(req, res) {
 //Missing data validation
 exports.createPrivateService = function(req, res) {
 
-
   var form = new formidable.IncomingForm();
   form.encoding = 'utf-8';
   form.uploadDir = 'app/tempUploads';
@@ -242,9 +394,9 @@ exports.createPrivateService = function(req, res) {
           });
           return handleError(res, new Error('file type is not supported'));
         } else {
-          var oldPath = file.path,    
-            newWebPath = 'uploads' + path.sep + 'public' + path.sep + Date.now() + file.name,       //the relative file path on disk
-            newPath = 'app' + path.sep + newWebPath;        // the relative file path on web
+          var oldPath = file.path,
+            newWebPath = 'uploads' + path.sep + 'private' + path.sep + Date.now() + file.name, //the relative file path on disk
+            newPath = 'app' + path.sep + newWebPath; // the relative file path on web
 
           fs.rename(oldPath, newPath, function() {
             console.log('file is saved');
@@ -256,27 +408,35 @@ exports.createPrivateService = function(req, res) {
             postData.createtime = moment().format('YYYY-MM-DD HH:mm:ss');
             postData.modifytime = moment().format('YYYY-MM-DD HH:mm:ss');
             postData.logo_url = newWebPath;
-            req.getConnection(function(err, connection) {
-              if (err) {
-                return handleError(res, err);
-              }
-              connection.query('insert into private_service set ?', postData, function(err, results) {
+
+
+            findMaxOrder(req, res, postData.community_id).then(function(value) { // Find the corrent order to insert
+              console.log(value);
+              postData.order = parseInt(value) + 1;
+
+              req.getConnection(function(err, connection) {
                 if (err) {
                   return handleError(res, err);
                 }
-                if (results.insertId) {
+                console.log(postData);
+                connection.query('insert into private_service set ?', postData, function(err, results) {
+                  if (err) {
+                    return handleError(res, err);
+                  }
+                  if (results.insertId) {
 
-                  connection.query('select * from private_service where ?', {
-                    id: results.insertId
-                  }, function(err, results) {
-                    if (err) {
-                      return handleError(res, err);
-                    }
+                    connection.query('select * from private_service where ?', {
+                      id: results.insertId
+                    }, function(err, results) {
+                      if (err) {
+                        return handleError(res, err);
+                      }
 
-                    return res.status(201).json(results);
-                  });
+                      return res.status(201).json(results);
+                    });
 
-                }
+                  }
+                });
               });
             });
           });
@@ -423,7 +583,6 @@ function deletePrivateServiceImage(req, res, id) {
 
 
 
-
 exports.updatePrivateService = function(req, res) {
 
   var form = new formidable.IncomingForm();
@@ -478,6 +637,7 @@ exports.updatePrivateService = function(req, res) {
 };
 
 
+
 exports.togglePrivateService = function(req, res) {
 
   if (!req.body) {
@@ -490,23 +650,42 @@ exports.togglePrivateService = function(req, res) {
   req.body.modifyoperator = req.user._id;
   delete req.body.id;
 
-  req.getConnection(function(err, connection) {
-    if (err) {
-      return handleError(res, err);
+
+
+  findMaxOrder(req, res, req.body.community_id).then(function(value) {
+
+    if (req.body.status === 'active') { // For activation, increment the order, for inactivation, decrement the order number.
+      req.body.order = parseInt(value) + 1;
     }
-    connection.query('update private_service set ? where ?', [req.body, {
-      'id': id
-    }], function(err, results) {
+
+    req.getConnection(function(err, connection) {
       if (err) {
         return handleError(res, err);
       }
-      console.log(results);
-      return res.status(200).json(results);
+      connection.query('update private_service set ? where ?', [req.body, {
+        'id': id
+      }], function(err, results) {
+        if (err) {
+          return handleError(res, err);
+        }
+
+        connection.query('select t1.id,t1.community_id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from private_service as t1 where ?', {
+            't1.id': id
+          },
+          function(err, results) {
+            return res.status(200).json(results[0]);
+          });
+
+      });
     });
+
+
+
   });
 
-};
 
+
+};
 
 
 

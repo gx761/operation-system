@@ -20,7 +20,7 @@ router.delete('/privateServices/:id', auth.hasRole('admin'), controller.deletePr
 router.put('/togglePrivateService/:id', auth.hasRole('admin'),controller.togglePrivateService);
 
 
-
+router.put('/orderService',auth.hasRole('admin'),controller.orderService);
 
 
 router.post('/o2oServices', auth.hasRole('admin'), controller.createO2oService);
