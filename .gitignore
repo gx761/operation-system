@@ -9,3 +9,4 @@ app/bower_components
 test/bower_components/
 .editorconfig
 sublime*
+app/uploads
