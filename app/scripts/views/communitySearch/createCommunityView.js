@@ -9,11 +9,16 @@ define([
     'collections/communitySearch/cityCollection',
     'collections/communitySearch/provinceCollection',
     'collections/communitySearch/districtCollection',
+    'collections/communitySearch/managementCompanyCollection',
+    'collections/communitySearch/managementStaffCollection',
     'views/communitySearch/locationsView',
+    'views/communitySearch/managementCompaniesView',
+    'views/communitySearch/managementStaffsView',
     'BackboneValidation',
     'views/modalDialogView',
 
-], function($, _, Backbone, JST, CountryCollection, CityCollection, ProvinceCollection, DistrictCollection, LocationsView) {
+], function($, _, Backbone, JST, CountryCollection, CityCollection, ProvinceCollection,
+            DistrictCollection,ManagementCompanyCollection,ManagementStaffCollection, LocationsView,ManagementCompaniesView,ManagementStaffsView) {
     'use strict';
 
     var CreateCommunityView = Backbone.ModalView.extend({
@@ -35,8 +40,7 @@ define([
             Backbone.Validation.bind(this);
             return this;
         },
-        populate: function() {
-
+        populateLocation:function(){
             this.countryCollection = new CountryCollection({});
             this.cityCollection = new CityCollection({});
             this.provinceCollection = new ProvinceCollection({});
@@ -89,7 +93,35 @@ define([
             this.countryCollection.fetch({
                 reset: true,
             });
+        },
+        populateManagementCompany:function(){
 
+            this.managementCompanyCollection = new ManagementCompanyCollection({});
+            this.managementStaffCollection = new ManagementStaffCollection({});
+
+            this.managementCompaniesView = new ManagementCompaniesView({
+                el: '#company_selector',
+                collection: this.managementCompanyCollection
+            });
+
+            this.managementStaffsView = new ManagementStaffsView({
+                el: '#staff_selector',
+                collection:this.managementStaffCollection
+            });
+
+            this.managementCompaniesView.childrenView = this.managementStaffsView;
+
+
+            this.managementCompanyCollection.fetch({
+                reset: true,
+            });
+
+
+        },
+
+        populate: function() {
+            this.populateLocation();
+            this.populateManagementCompany();
         },
         cancelCreate: function(e) {
             e.preventDefault();
@@ -105,7 +137,7 @@ define([
                 this.model.set('areacode',$('#new_district_selector').val());
                 this.model.set('gpslng',$('#gpslng').val());
                 this.model.set('gpslat',$('#gpslat').val());
-
+                this.model.set('staff_id',$('#staff_selector').val());
                 this.model.validate();
                 var self=this;
 

@@ -53,7 +53,6 @@ define([
             serviceCollection.trigger('reset');
             sortServicesView.showModal();
 
-
         },
 
         populateHeader: function() {

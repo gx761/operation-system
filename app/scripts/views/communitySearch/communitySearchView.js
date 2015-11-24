@@ -69,8 +69,6 @@ define([
                 $('#content').removeClass('withSidebar');
             }
 
-            
-
         },
 
         populate: function() {

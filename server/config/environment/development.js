@@ -16,6 +16,7 @@ module.exports = {
     user: 'cooxm',
     password: 'cooxm',
     port: 3306,
-    database: 'cooxm_main'
+    database: 'cooxm_main',
+    prefix:'yy'
   },
 };

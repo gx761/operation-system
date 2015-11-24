@@ -1,68 +1,76 @@
 <div class="modal-dialog">
-	<div class="modal-content">
-		<form action="" class="form-horizontal" id="create_community_form" novalidate="noValidate", data-parsley-validate,data-parsley-ui-enabled="true">
-			<div class="form-group">
-			<div class="col-xs-3">
-				<select name="country" id="new_country_selector" required class="form-control col-xs-3">
-					<option value=''>国家</option>
-				</select>
-			</div>
-			
-			
-			<div class="col-xs-3">
-				<select name="province" id="new_province_selector" required class="form-control col-xs-3">
-					<option value=''>省份</option>
-				</select>
-				</div>
-						
-			<div class="col-xs-3">
-				<select name="city" id="new_city_selector" required class="form-control col-xs-3">
-					<option value=''>城市</option>
-				</select>
-				</div>
-			
-			
-			<div class="col-xs-3">
-				<select name="district" id="new_district_selector" required class="form-control col-xs-3">
-					<option value=''>区域</option>
-				</select>		
-			</div>
-			</div>
+    <div class="modal-content">
+        <form action="" class="form-horizontal" id="create_community_form" novalidate="noValidate" ,
+              data-parsley-validate,data-parsley-ui-enabled="true">
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <select name="country" id="new_country_selector" required class="form-control col-xs-3">
+                        <option value=''>国家</option>
+                    </select>
+                </div>
 
-			<div class="form-group">
-			<div class="col-xs-6">
-			<input type="text" class="form-control" name="gpslng" required id="gpslng" placeholder="经度">
-			</div>
-			<div class="col-xs-6">
-			<input type="text" class="form-control" name="gpslat" required id="gpslat" placeholder="纬度">
-			</div>
-			</div>
 
-			<div class="form-group">
-			<div class="col-xs-12">
-				<input type="text" class="form-control" name="create_community_name" id="create_community_name" required placeholder="小区">
-				</div>
-			</div>
-			<div class="form-group">
-			<div class="col-xs-12">
-				<input type="text" class="form-control" name="property_manager" required placeholder="小区物业">
-				</div>
-			</div>
-			<div class="form-group">	
-			<div class="col-xs-12">
-				<input type="text" class="form-control" name="property_manager_number" required placeholder="小区物业人员手机号">
-				</div>
-			</div>
+                <div class="col-xs-3">
+                    <select name="province" id="new_province_selector" required class="form-control col-xs-3">
+                        <option value=''>省份</option>
+                    </select>
+                </div>
 
-			<div class="form-group">
-			<div class="col-xs-12">
-				<button class="btn btn-primary" type="submit" id="confirm_create">确定添加</button>	
-			<button class="btn btn-default" type="submit" id="cancel_create">取消添加</button>	
-			</div>
-				
-	
-			</div>
+                <div class="col-xs-3">
+                    <select name="city" id="new_city_selector" required class="form-control col-xs-3">
+                        <option value=''>城市</option>
+                    </select>
+                </div>
 
-		</form>
-	</div>
+
+                <div class="col-xs-3">
+                    <select name="district" id="new_district_selector" required class="form-control col-xs-3">
+                        <option value=''>区域</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="gpslng" required id="gpslng" placeholder="经度">
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="gpslat" required id="gpslat" placeholder="纬度">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <input type="text" class="form-control" name="create_community_name" id="create_community_name"
+                           required placeholder="小区">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <select name="company_selector" id="company_selector" required class="form-control">
+                        <option value=''>物业公司</option>
+                    </select>
+
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <select name="staff_selector" id="staff_selector" required class="form-control">
+                        <option value=''>物业人员</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <button class="btn btn-primary" type="submit" id="confirm_create">确定添加</button>
+                    <button class="btn btn-default" type="submit" id="cancel_create">取消添加</button>
+                </div>
+
+
+            </div>
+
+        </form>
+    </div>
 </div>

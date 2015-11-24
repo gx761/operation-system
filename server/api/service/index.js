@@ -10,6 +10,7 @@ var auth = require('../../auth/auth.service');
 router.get('/publicServices/:communityId', controller.showPublicServices);
 router.put('/publicServices/:id', auth.hasRole('admin'),controller.updatePublicService);
 
+router.get('/services/:id',controller.showAllServices);
 
 
 
@@ -34,12 +35,6 @@ router.put('/toggleO2oService/:id', auth.hasRole('admin'),controller.toggleO2oSe
 router.delete('/o2oServices/:id', auth.hasRole('admin'), controller.deleteO2oService);
 
 
-/*
-router.get('/', controller.index);
-router.get('/:id', controller.show);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
-router.delete('/:id', controller.destroy);*/
+
 
 module.exports = router;

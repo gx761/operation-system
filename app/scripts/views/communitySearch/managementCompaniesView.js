@@ -5,13 +5,11 @@ define([
     'underscore',
     'backbone',
     'templates',
-    'views/communitySearch/locationView'
-], function ($, _, Backbone, JST, LocationView) {
-
+    'views/communitySearch/managementCompanyView'
+], function ($, _, Backbone, JST,ManagementCompanyView) {
     'use strict';
 
-    var LocationsView = Backbone.View.extend({
-
+    var ManagementCompaniesView = Backbone.View.extend({
         tagName:'select',
         className:'form-control',
 
@@ -21,41 +19,40 @@ define([
         initialize: function (options) {
             this.$el.attr('name',options.name) ;
             $(this.el).html('<option value="">请选择</option>');
-             _.bindAll(this);
+            _.bindAll(this);
             this.collection.on('reset', this.addAll);
         },
         addOne: function (location) {
-            var locationView = new LocationView({model: location});
-            this.locationViews.push(locationView);
+            var managementCompanyView = new ManagementCompanyView({model: location});
+            this.managementCompanyViews.push(managementCompanyView);
 
             $(this.el).append(
-                locationView.render().el
+                managementCompanyView.render().el
             );
         },
         addAll: function () {
-            _.each(this.locationViews,function(locationView){
-              locationView.remove();
+            _.each(this.locationViews,function(managementCompanyView){
+                managementCompanyView.remove();
             });
-            this.locationViews = [];
+            this.managementCompanyViews = [];
             this.collection.each(this.addOne);
         },
         changeSelected: function () {
+
             if(this.$el.val()){
                 this.setSelectedId(this.$el.val());
             }
             else{
                 if(this.childrenView){
-                   this.resetChildrenView(this.childrenView,0); 
+                    this.resetChildrenView(this.childrenView,0);
                 }
-                
-                if(this.parentView){
-                    this.parentView.updateSearchResults();
-                }
-                
+
             }
         },
+        setSelectedId: function(company_id) {
+            this.populateForm('api/ajax/' + company_id + '/getManagementStaff');
+        },
 
-    
 
         populateForm:function(url){
             this.childrenView.collection.url=url;
@@ -64,23 +61,23 @@ define([
         },
         resetChildrenView:function(childrenView,level){
 
-                while(level&&level>0){
-                    if(childrenView.childrenView){
-                        childrenView = childrenView.childrenView;
-                        level--;
-                    }
-                    else{
-                        break;
-                    }
+            while(level&&level>0){
+                if(childrenView.childrenView){
+                    childrenView = childrenView.childrenView;
+                    level--;
                 }
+                else{
+                    break;
+                }
+            }
 
             childrenView.collection.reset();
+            console.log(123);
             if(childrenView.childrenView){
-               this.resetChildrenView(childrenView.childrenView);
+                this.resetChildrenView(childrenView.childrenView);
             }
         }
-
     });
 
-    return LocationsView;
+    return ManagementCompaniesView;
 });

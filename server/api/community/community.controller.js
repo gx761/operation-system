@@ -18,6 +18,7 @@ var _ = require('lodash');
 var mysql = require('mysql');
 
 var moment =require('moment');
+var config = require('../../config/environment');
 
 function mysqlLog(sql,inserts){
     var sqlString = mysql.format(sql, inserts);
@@ -48,7 +49,8 @@ exports.create = function(req, res) {
         createtime:moment().format('YYYY-MM-DD HH:mm:ss'),
         modifytime:moment().format('YYYY-MM-DD HH:mm:ss'),
         gpslat:req.body.gpslat,
-        gpslng:req.body.gpslng
+        gpslng:req.body.gpslng,
+        staff_id:req.body.staff_id
     };
 
 
@@ -123,12 +125,17 @@ exports.index = function(req, res) {
 
 };
 
+
+
+
+
 // Get a single community
 exports.show = function(req, res) {
 
    req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
-        connection.query('select t1.communityname, t2.* from dic_community as t1 inner join management_company as t2 on t1.mcompanyid = t2.id where ?',{'t1.communitycode':req.params.id}, function(err, results) {
+
+        connection.query('select t1.communityname, t3.* from dic_community as t1 inner join '+config.dbOptions.prefix+'_'+'management_staff as t2 on t1.staff_id=t2.id inner join '+config.dbOptions.prefix+'_'+'management_company as t3 on t2.company_id=t3.id where ?',{'t1.communitycode':req.params.id}, function(err, results) {
             if(err) { return handleError(res, err); }
             return res.status(200).json(results);
         });
@@ -144,7 +151,7 @@ exports.show = function(req, res) {
 exports.showMcompanyInfo = function(req,res){
       req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
-        connection.query('select t1.communitycode as communityId,t1.communityname,t2.name,t2.contact_mobile,t2.contact_name from dic_community as t1 inner join management_company as t2 on t1.mcompanyid=t2.id where ?',{'t1.communitycode':req.params.id}, function(err, results) {
+        connection.query('select t1.communitycode as communityId,t1.communityname,t2.name as contact_name,t2.mobile as contact_mobile,t3.name from dic_community as t1 inner join '+config.dbOptions.prefix+'_'+'management_staff as t2 on t1.staff_id=t2.id inner join '+config.dbOptions.prefix+'_'+'management_company as t3 on t3.id=t2.company_id where ?',{'t1.communitycode':req.params.id}, function(err, results) {
             if(err) { return handleError(res, err); }
             return res.status(200).json(results[0]);
         });
