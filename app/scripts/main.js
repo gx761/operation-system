@@ -19,6 +19,7 @@ require.config({
         }
 
     },
+    wrapShim: true,
     paths: {
         jquery: '../bower_components/jquery/jquery',
         backbone: '../bower_components/backbone/backbone',
