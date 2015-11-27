@@ -10,3 +10,4 @@ test/bower_components/
 .editorconfig
 sublime*
 app/uploads
+app/tempUploads
