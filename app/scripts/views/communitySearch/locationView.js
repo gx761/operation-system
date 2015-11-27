@@ -1,13 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-], function ($, _, Backbone) {
-    'use strict';
-
-    var LocationView = Backbone.View.extend({
+(function(){
+'use strict';
+OperationSystem.Views.communitySearch.LocationView = Backbone.View.extend({
 
         tagName: 'option',
 
@@ -29,5 +26,7 @@ define([
         }
     });
 
-    return LocationView;
-});
+
+})();
+
+

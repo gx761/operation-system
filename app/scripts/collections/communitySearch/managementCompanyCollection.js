@@ -1,17 +1,17 @@
 /*global define*/
+OperationSystem.Collections=OperationSystem.Collections||{};
+OperationSystem.Collections.communitySearch=OperationSystem.Collections.communitySearch||{};
 
-define([
-    'underscore',
-    'backbone',
-    'models/communitySearch/managementCompanyModel',
-    'app'
-], function (_, Backbone, ManagementCompanyModel,app) {
-    'use strict';
-
-    var ManagementCompanyCollection = Backbone.Collection.extend({
-        model: ManagementCompanyModel,
-        url: app.API + 'api/ajax/companies',
+(function(){
+'use strict';
+OperationSystem.Collections.communitySearch.ManagementCompanyCollection = Backbone.Collection.extend({
+        model: OperationSystem.Models.communitySearch.ManagementCompanyModel,
+        url: OperationSystem.app.API + 'api/ajax/companies',
     });
 
-    return ManagementCompanyCollection;
-});
+
+})();
+
+
+
+

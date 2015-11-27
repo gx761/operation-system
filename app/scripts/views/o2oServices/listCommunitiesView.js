@@ -1,15 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.o2oServices = OperationSystem.Views.o2oServices ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'backgrid'
-], function($, _, Backbone, JST, Backgrid) {
+(function(){
     'use strict';
-
-    var ListCommunitiesView = Backbone.View.extend({
+    OperationSystem.Views.o2oServices.ListCommunitiesView = Backbone.View.extend({
         template: JST['app/scripts/templates/listCommunities.ejs'],
 
         // tagName: 'div',
@@ -71,5 +66,5 @@ define([
         }
     });
 
-    return ListCommunitiesView;
-});
+})();
+

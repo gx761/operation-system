@@ -1,15 +1,11 @@
 /*global define*/
+OperationSystem.Collections=OperationSystem.Collections||{};
+OperationSystem.Collections.communitySearch=OperationSystem.Collections.communitySearch||{};
 
-define([
-    'underscore',
-    'backbone',
-    'models/communitySearch/provinceModel'
-], function (_, Backbone, ProvinceModel) {
-    'use strict';
-
-    var ProvinceCollection = Backbone.Collection.extend({
-        model: ProvinceModel
+(function(){
+'use strict';
+OperationSystem.Collections.communitySearch.ProvinceCollection = Backbone.Collection.extend({
+        model: OperationSystem.Models.communitySearch.ProvinceModel
     });
 
-    return ProvinceCollection;
-});
+})();

@@ -1,13 +1,11 @@
 /*global define*/
 
-define([
-    'underscore',
-    'backbone',
-   
-], function(_, Backbone) {
-    'use strict';
+OperationSystem.Models=OperationSystem.Models||{};
+OperationSystem.Models.communitySearch=OperationSystem.Models.communitySearch||{};
 
-    var CommunityModel = Backbone.Model.extend({
+(function(){
+    'use strict';
+    OperationSystem.Models.communitySearch.CommunityModel = Backbone.Model.extend({
         url: '/api/communities',
 
         initialize: function() {},
@@ -60,5 +58,8 @@ define([
         }
     });
 
-    return CommunityModel;
-});
+
+
+})();
+
+

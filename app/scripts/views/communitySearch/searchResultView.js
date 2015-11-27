@@ -1,14 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function ($, _, Backbone, JST) {
+(function(){
     'use strict';
-
-    var SearchResultView = Backbone.View.extend({
+    OperationSystem.Views.communitySearch.SearchResultView = Backbone.View.extend({
 
         tagName: 'li',
 
@@ -37,6 +33,4 @@ define([
         }
 
     });
-
-    return SearchResultView;
-});
+})();

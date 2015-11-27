@@ -1,17 +1,13 @@
 /*global define*/
+OperationSystem.Collections=OperationSystem.Collections||{};
+OperationSystem.Collections.communitySearch=OperationSystem.Collections.communitySearch||{};
 
-define([
-    'underscore',
-    'backbone',
-    'models/communitySearch/communityModel',
-    'app'
-], function (_, Backbone, CommunityModel,app) {
-    'use strict';
-
-    var CommunityCollection = Backbone.Collection.extend({
-        model: CommunityModel,
-        url: app.API + 'api/communities/'
+(function(){
+'use strict';
+OperationSystem.Collections.communitySearch.CommunityCollection = Backbone.Collection.extend({
+        model: OperationSystem.Models.communitySearch.CommunityModel,
+        url:OperationSystem.app.API + 'api/communities/'
     });
 
-    return CommunityCollection;
-});
+
+})();

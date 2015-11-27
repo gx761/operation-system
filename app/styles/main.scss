@@ -1,6 +1,11 @@
 $icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
 
-@import 'bootstrap-sass-official/assets/stylesheets/bootstrap.scss';
+
+@import 'bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/border-radius.scss';
+@import 'bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/vendor-prefixes.scss';
+@import 'bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/clearfix.scss';
+@import 'bootstrap-sass-official/assets/stylesheets/bootstrap/variables.scss';
+
 @import "views/community_search.scss";
 @import "views/service_management.scss";
 @import "views/o2o_service_management.scss";

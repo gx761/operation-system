@@ -1,17 +1,12 @@
 /*global define*/
+OperationSystem.Collections=OperationSystem.Collections||{};
+OperationSystem.Collections.communityDetails=OperationSystem.Collections.communityDetails||{};
 
-define([
-	'app',
-    'underscore',
-'backbone',
-    'models/communityDetails/privateServiceModel'
-], function (app,_, Backbone, PrivateServiceModel) {
+(function(){
     'use strict';
-
-    var PrivateServiceCollection = Backbone.Collection.extend({
-        model: PrivateServiceModel,
+    OperationSystem.Collections.communityDetails.PrivateServiceCollection = Backbone.Collection.extend({
+        model: OperationSystem.Models.communityDetails.PrivateServiceModel,
 
     });
+})();
 
-    return PrivateServiceCollection;
-});

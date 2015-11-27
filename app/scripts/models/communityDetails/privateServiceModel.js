@@ -1,13 +1,11 @@
 /*global define*/
 
-define([
-    'underscore',
-    'backbone',
+OperationSystem.Models=OperationSystem.Models||{};
+OperationSystem.Models.communityDetails=OperationSystem.Models.communityDetails||{};
 
-], function (_, Backbone) {
+(function(){
     'use strict';
-
-    var PrivateServiceModel = Backbone.Model.extend({
+    OperationSystem.Models.communityDetails.PrivateServiceModel = Backbone.Model.extend({
         urlRoot: 'api/services/privateServices',
 
         initialize: function() {
@@ -28,5 +26,8 @@ define([
         }
     });
 
-    return PrivateServiceModel;
-});
+
+
+})();
+
+

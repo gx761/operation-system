@@ -1,14 +1,11 @@
 /*global define*/
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function($, _, Backbone, JST) {
-    'use strict';
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-    var EditPrivateServiceView = Backbone.ModalView.extend({
+(function(){
+    'use strict';
+    OperationSystem.Views.communityDetails .EditPrivateServiceView = Backbone.ModalView.extend({
         template: JST['app/scripts/templates/communityDetails/editPrivateService.ejs'],
 
         events: {
@@ -116,5 +113,6 @@ define([
 
     });
 
-    return EditPrivateServiceView;
-});
+})();
+
+

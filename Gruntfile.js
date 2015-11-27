@@ -129,7 +129,7 @@ module.exports=function(grunt){
         },
         open: {
             server: {
-                path: 'http://localhost:<%= connect.options.port %>'
+                path: 'http://localhost:<%= connect.options.port %>/operation.html'
             },
             test: {
                 path: 'http://localhost:<%= connect.test.options.port %>'
@@ -155,7 +155,7 @@ module.exports=function(grunt){
             all: {
                 options: {
                     run: true,
-                    urls: ['http://localhost:<%= connect.test.options.port %>/index.html']
+                    urls: ['http://localhost:<%= connect.test.options.port %>/operation.html']
                 }
             }
         },
@@ -186,27 +186,6 @@ module.exports=function(grunt){
             }
         },
 
-        requirejs: {
-            dist: {
-                // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
-                options: {
-                    almond:true,
-                    replaceRequireScript: [{
-                        files: ['<%= yeoman.dist %>/public/index.html'],
-                        module: 'main'
-                    }],
-                    modules: [{name: 'main'}],
-                    baseUrl: '<%= yeoman.app %>/scripts',
-                    mainConfigFile: '<%= yeoman.app %>/scripts/main.js', // contains path specifications and nothing else important with respect to config
-                    dir: '.tmp/scripts',
-                    keepBuildDir: true,
-                    optimize: 'none', // optimize by uglify task,
-                    useStrict: true,
-                    wrapShim: false
-
-                }
-            }
-        },
         uglify: {
             options: {
                 mangle: true
@@ -220,7 +199,7 @@ module.exports=function(grunt){
             }
         },
         useminPrepare: {
-            html: '<%= yeoman.app %>/index.html',
+            html: '<%= yeoman.app %>/operation.html',
             options: {
                 dest: '<%= yeoman.dist%>/public'
             }
@@ -246,6 +225,10 @@ module.exports=function(grunt){
             dist: {
                 files: {
                     '<%= yeoman.dist %>/public/styles/main.css': [
+                        '.tmp/styles/{,*/}*.css',
+                        '<%= yeoman.app %>/styles/{,*/}*.css'
+                    ],
+                    '<%= yeoman.dist %>/public/styles/bootstrap.css': [
                         '.tmp/styles/{,*/}*.css',
                         '<%= yeoman.app %>/styles/{,*/}*.css'
                     ]
@@ -308,7 +291,7 @@ module.exports=function(grunt){
         },
         jst: {
             options: {
-                amd: true
+                amd: false
             },
             compile: {
                 files: {
@@ -321,7 +304,7 @@ module.exports=function(grunt){
                 files: {
                     src: [
                         '<%= yeoman.dist %>/public/scripts/{,*/}*.js',
-                        '<%= yeoman.dist %>/public/styles/{,*/}*.css',
+                        '<%= yeoman.dist %>/public/styles/main.css',
                         '<%= yeoman.dist %>/public/images/{,*/}*.{png,jpg,jpeg,gif,webp}',
                         '/styles/fonts/{,*/}*.*',
                         'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*.*'
@@ -400,7 +383,7 @@ module.exports=function(grunt){
         'htmlmin',
         'concat',
         'cssmin',
-        'requirejs',
+      //  'requirejs',
         'uglify',
         'copy',
         'rev',

@@ -1,15 +1,15 @@
 /*global define*/
 
-define([
-    'underscore',
-    'backbone',
-    'models/communitySearch/cityModel'
-], function (_, Backbone, CityModel) {
-    'use strict';
+OperationSystem.Collections=OperationSystem.Collections||{};
+OperationSystem.Collections.communitySearch=OperationSystem.Collections.communitySearch||{};
 
-    var CityCollection = Backbone.Collection.extend({
-        model: CityModel,
+(function(){
+'use strict';
+OperationSystem.Collections.communitySearch.CityCollection = Backbone.Collection.extend({
+        model: OperationSystem.Models.communitySearch.CityModel,
     });
-    
-    return CityCollection;
-});
+
+
+})();
+
+

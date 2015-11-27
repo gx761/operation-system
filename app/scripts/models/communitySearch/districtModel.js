@@ -1,12 +1,11 @@
 /*global define*/
 
-define([
-    'underscore',
-    'backbone'
-], function (_, Backbone) {
-    'use strict';
+OperationSystem.Models=OperationSystem.Models||{};
+OperationSystem.Models.communitySearch=OperationSystem.Models.communitySearch||{};
 
-    var DistrictModel = Backbone.Model.extend({
+(function(){
+    'use strict';
+    OperationSystem.Models.communitySearch.DistrictModel = Backbone.Model.extend({
         idAttribute:"areacode",
         initialize: function() {
         },
@@ -24,5 +23,7 @@ define([
         }
     });
 
-    return DistrictModel;
-});
+
+})();
+
+

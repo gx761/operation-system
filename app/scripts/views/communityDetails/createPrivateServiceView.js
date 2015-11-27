@@ -1,18 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'js-cookie',
-    'templates',
-    'BackboneValidation',
-    'views/modalDialogView'
-
-], function($, _, Backbone, Cookies, JST) {
+(function(){
     'use strict';
-
-    var CreatePrivateServiceView = Backbone.ModalView.extend({
+OperationSystem.Views.communityDetails.CreatePrivateServiceView = Backbone.ModalView.extend({
         template: JST['app/scripts/templates/communityDetails/createPrivateService.ejs'],
 
         events: {
@@ -130,5 +122,7 @@ define([
     });
 
 
-    return CreatePrivateServiceView;
-});
+
+})();
+
+

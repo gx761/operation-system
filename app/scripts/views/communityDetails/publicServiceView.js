@@ -1,14 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function($, _, Backbone, JST) {
+(function(){
     'use strict';
-
-    var PublicServiceView = Backbone.View.extend({
+    OperationSystem.Views.communityDetails.PublicServiceView = Backbone.View.extend({
         template: JST['app/scripts/templates/communityDetails/publicService.ejs'],
 
         tagName: 'div',
@@ -64,5 +60,6 @@ define([
         }
     });
 
-    return PublicServiceView;
-});
+
+
+})();

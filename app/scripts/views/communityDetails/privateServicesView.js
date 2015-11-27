@@ -1,17 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/communityDetails/privateServiceView',
-    'views/communityDetails/createPrivateServiceView',
-    'models/communityDetails/privateServiceModel'
-], function($, _, Backbone, JST, PrivateServiceView, CreatePrivateServiceView, PrivateServiceModel) {
+(function(){
     'use strict';
-
-    var PrivateServicesView = Backbone.View.extend({
+    OperationSystem.Views.communityDetails.PrivateServicesView = Backbone.View.extend({
         template: JST['app/scripts/templates/communityDetails/privateServices.ejs'],
 
         tagName: 'div',
@@ -39,12 +32,12 @@ define([
 
         addService: function(e) {
             e.preventDefault();
-            var createPrivateServiceModel = new PrivateServiceModel({});
+            var createPrivateServiceModel = new OperationSystem.Views.communityDetails.PrivateServiceModel({});
 
 
             createPrivateServiceModel.set('community_id', this.communityId);
 
-            var view = new CreatePrivateServiceView({
+            var view = new OperationSystem.Views.communityDetails.CreatePrivateServiceView({
                 model: createPrivateServiceModel,
                 collection: this.collection
             });
@@ -53,7 +46,7 @@ define([
         },
         addOne: function(privateService) {
 
-            var privateServiceView = new PrivateServiceView({
+            var privateServiceView = new OperationSystem.Views.communityDetails.PrivateServiceView({
                 model: privateService
             });
 
@@ -89,5 +82,6 @@ define([
 
     });
 
-    return PrivateServicesView;
-});
+
+})();
+

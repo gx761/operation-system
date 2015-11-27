@@ -1,27 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'collections/communitySearch/countryCollection',
-    'collections/communitySearch/cityCollection',
-    'collections/communitySearch/provinceCollection',
-    'collections/communitySearch/districtCollection',
-    'collections/communitySearch/managementCompanyCollection',
-    'collections/communitySearch/managementStaffCollection',
-    'views/communitySearch/locationsView',
-    'views/communitySearch/managementCompaniesView',
-    'views/communitySearch/managementStaffsView',
-    'BackboneValidation',
-    'views/modalDialogView',
-
-], function($, _, Backbone, JST, CountryCollection, CityCollection, ProvinceCollection,
-            DistrictCollection,ManagementCompanyCollection,ManagementStaffCollection, LocationsView,ManagementCompaniesView,ManagementStaffsView) {
+(function(){
     'use strict';
-
-    var CreateCommunityView = Backbone.ModalView.extend({
+    OperationSystem.Views.communitySearch.CreateCommunityView = Backbone.ModalView.extend({
         template: JST['app/scripts/templates/communitySearch/createCommunity.ejs'],
 
         events: {
@@ -41,29 +24,29 @@ define([
             return this;
         },
         populateLocation:function(){
-            this.countryCollection = new CountryCollection({});
-            this.cityCollection = new CityCollection({});
-            this.provinceCollection = new ProvinceCollection({});
-            this.districtCollection = new DistrictCollection({});
+            this.countryCollection = new OperationSystem.Collections.communitySearch.CountryCollection({});
+            this.cityCollection = new OperationSystem.Collections.communitySearch.CityCollection({});
+            this.provinceCollection = new OperationSystem.Collections.communitySearch.ProvinceCollection({});
+            this.districtCollection = new OperationSystem.Collections.communitySearch.DistrictCollection({});
 
-            var CountriesView = LocationsView.extend({
+            var CountriesView = OperationSystem.Views.communitySearch.LocationsView.extend({
                 setSelectedId: function(countryId) {
                     this.populateForm('api/ajax/' + countryId + '/getProvinces');
                 }
             });
 
-            var ProvincesView = LocationsView.extend({
+            var ProvincesView = OperationSystem.Views.communitySearch.LocationsView.extend({
                 setSelectedId: function(provinceId) {
                     this.populateForm('api/ajax/' + provinceId + '/getCities');
                 }
             });
-            var CitiesView = LocationsView.extend({
+            var CitiesView = OperationSystem.Views.communitySearch.LocationsView.extend({
                 setSelectedId: function(cityId) {
                     this.populateForm('api/ajax/' + cityId + '/getDistricts');
                 }
             });
 
-            var DistrictsView = LocationsView.extend({
+            var DistrictsView = OperationSystem.Views.communitySearch.LocationsView.extend({
                 setSelectedId: function() {}
             });
 
@@ -96,15 +79,15 @@ define([
         },
         populateManagementCompany:function(){
 
-            this.managementCompanyCollection = new ManagementCompanyCollection({});
-            this.managementStaffCollection = new ManagementStaffCollection({});
+            this.managementCompanyCollection = new OperationSystem.Collections.communitySearch.ManagementCompanyCollection({});
+            this.managementStaffCollection = new OperationSystem.Collections.communitySearch.ManagementStaffCollection({});
 
-            this.managementCompaniesView = new ManagementCompaniesView({
+            this.managementCompaniesView = new OperationSystem.Views.communitySearch.ManagementCompaniesView({
                 el: '#company_selector',
                 collection: this.managementCompanyCollection
             });
 
-            this.managementStaffsView = new ManagementStaffsView({
+            this.managementStaffsView = new OperationSystem.Views.communitySearch.ManagementStaffsView({
                 el: '#staff_selector',
                 collection:this.managementStaffCollection
             });
@@ -150,8 +133,6 @@ define([
                     });
                 }
 
-                
-                
             }
         }
 
@@ -160,5 +141,5 @@ define([
     });
 
 
-    return CreateCommunityView;
-});
+})();
+

@@ -1,12 +1,12 @@
 /*global define*/
 
-define([
-    "app",
-], function (app) {
-    'use strict';
+OperationSystem.Models =OperationSystem.Models||{};
 
-    var UserModel = Backbone.Model.extend({
-        url: app.API+"/api/users/me",
+(function(){
+'use strict';
+
+OperationSystem.Models.UserModel = Backbone.Model.extend({
+        url: OperationSystem.app.API+"/api/users/me",
 
         idAttribute:"_id",
         initialize: function() {
@@ -27,5 +27,5 @@ define([
         }
     });
 
-    return UserModel;
-});
+})();
+

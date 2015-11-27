@@ -1,12 +1,10 @@
 /*global define*/
+OperationSystem.Models=OperationSystem.Models||{};
+OperationSystem.Models.communitySearch=OperationSystem.Models.communitySearch||{};
 
-define([
-    'underscore',
-    'backbone'
-], function (_, Backbone) {
+(function(){
     'use strict';
-
-    var ManagementStaffModel = Backbone.Model.extend({
+    OperationSystem.Models.communitySearch.ManagementStaffModel = Backbone.Model.extend({
         url: '',
 
         initialize: function() {
@@ -23,5 +21,7 @@ define([
         }
     });
 
-    return ManagementStaffModel;
-});
+})();
+
+
+

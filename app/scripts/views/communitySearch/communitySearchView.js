@@ -1,27 +1,11 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'collections/communitySearch/countryCollection',
-    'collections/communitySearch/cityCollection',
-    'collections/communitySearch/provinceCollection',
-    'collections/communitySearch/districtCollection',
-    'collections/communitySearch/communityCollection',
-    'views/communitySearch/locationsView',
-    'views/communitySearch/searchResultsView',
-    'views/communitySearch/communityView',
-    'views/communitySearch/createCommunityView',
-    'models/communitySearch/communityModel',
+(function(){
+'use strict';
 
-], function($, _, Backbone, JST, CountryCollection,
-    CityCollection, ProvinceCollection, DistrictCollection, CommunityCollection,
-    LocationsView, SearchResultsView, CommunityView, CreateCommunityView,CommunityModel) {
-    'use strict';
-
-    var CommunitySearchView = Backbone.View.extend({
+OperationSystem.Views.communitySearch.CommunitySearchView = Backbone.View.extend({
         template: JST['app/scripts/templates/communitySearch/communitySearch.ejs'],
 
         tagName: 'div',
@@ -45,8 +29,8 @@ define([
         },
         showAddCommunity:function(e){
             e.preventDefault();
-            var createCommunityModel = new CommunityModel({});
-            var view = new CreateCommunityView({
+            var createCommunityModel = new OperationSystem.Models.communitySearch.CommunityModel({});
+            var view = new OperationSystem.Views.communitySearch.CreateCommunityView({
                 model:createCommunityModel
             });
             view.render().showModal().populate();
@@ -73,43 +57,43 @@ define([
 
         populate: function() {
             var self = this;
-            this.countryCollection = new CountryCollection({});
-            this.cityCollection = new CityCollection({});
-            this.provinceCollection = new ProvinceCollection({});
-            this.districtCollection = new DistrictCollection({});
-            this.communityCollection = new CommunityCollection({});
-            var CountriesView = LocationsView.extend({
+            this.countryCollection = new OperationSystem.Collections.communitySearch.CountryCollection({});
+            this.cityCollection = new OperationSystem.Collections.communitySearch.CityCollection({});
+            this.provinceCollection = new OperationSystem.Collections.communitySearch.ProvinceCollection({});
+            this.districtCollection = new OperationSystem.Collections.communitySearch.DistrictCollection({});
+            this.communityCollection = new OperationSystem.Collections.communitySearch.CommunityCollection({});
+            var CountriesView = OperationSystem.Views.communitySearch.LocationsView.extend({
                 setSelectedId: function(countryId) {
                     this.populateForm('api/ajax/' + countryId + '/getProvinces');
                     self.updateSearchResults();
                 }
             });
 
-            var ProvincesView = LocationsView.extend({
+            var ProvincesView = OperationSystem.Views.communitySearch.LocationsView.extend({
                 setSelectedId: function(provinceId) {
                     this.populateForm('api/ajax/' + provinceId + '/getCities');
                     self.updateSearchResults();
                 }
             });
 
-            var CitiesView = LocationsView.extend({
+            var CitiesView = OperationSystem.Views.communitySearch.LocationsView.extend({
                 setSelectedId: function(cityId) {
                     this.populateForm('api/ajax/' + cityId + '/getDistricts');
                     self.updateSearchResults();
                 }
             });
-            var DistrictsView = LocationsView.extend({
+            var DistrictsView = OperationSystem.Views.communitySearch.LocationsView.extend({
                 setSelectedId: function() {
                     self.updateSearchResults();
                 }
             });
-            CommunityView = CommunityView.extend({
+            var CommunityView = OperationSystem.Views.communitySearch.CommunityView.extend({
                 setName: function() {
                     self.updateSearchResults();
                 }
             });
 
-            this.searchResultsView = new SearchResultsView({
+            this.searchResultsView = new OperationSystem.Views.communitySearch.SearchResultsView({
                 el: '#search-result-list',
                 collection: this.communityCollection
             });
@@ -185,5 +169,6 @@ define([
         }
     });
 
-    return CommunitySearchView;
-});
+
+})();
+

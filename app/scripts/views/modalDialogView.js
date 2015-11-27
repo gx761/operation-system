@@ -1,14 +1,9 @@
 /*global define*/
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function($, _, Backbone, JST) {
-    'use strict';
 
-    Backbone.ModalView = Backbone.View.extend({
+(function(){
+    'use strict';
+   Backbone.ModalView = Backbone.View.extend({
         template: JST['app/scripts/templates/modalDialog.ejs'],
 
         tagName: 'div',
@@ -87,5 +82,4 @@ define([
 
     });
 
-    return this;
-});
+} )();

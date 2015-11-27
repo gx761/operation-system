@@ -1,19 +1,9 @@
 /*global define*/
+OperationSystem.Routers=OperationSystem.Routers||{};
 
-define([
-    'jquery',
-    'backbone',
-    'views/headerView',
-    'views/indexView',
-    'views/loginView',
-    'views/communitySearch/communitySearchView',
-    'views/communityDetails/communityDetailsView',
-    'views/o2oServices/o2oServicesView',
-    'app'
-], function($, Backbone, HeaderView, IndexView, LoginView, CommunitySearchView, CommunityDetailsView, O2oServicesView, app) {
+(function(){
     'use strict';
-
-    var IndexRouter = Backbone.Router.extend({
+    OperationSystem.Routers.IndexRouter = Backbone.Router.extend({
         routes: {
             '': 'index',
             'login': 'login',
@@ -23,7 +13,7 @@ define([
         listPublicServices: function() {
             this.showHeader();
             this.showSearchBar();
-            this.show(new O2oServicesView({}), {
+            this.show(new OperationSystem.Views.o2oServices.O2oServicesView({}), {
                 requiresAuth: true
             });
         },
@@ -31,7 +21,7 @@ define([
         showServicesInfo: function(communityId) {
             this.showHeader();
             this.showSearchBar();
-            this.show(new CommunityDetailsView({
+            this.show(new OperationSystem.Views.communityDetails.CommunityDetailsView({
                 communityId: communityId
             }), {
                 requiresAuth: true
@@ -50,7 +40,7 @@ define([
                 delete this.headerView;
             }
 
-            this.show(new LoginView({}),{withSidebar:false});
+            this.show(new OperationSystem.Views.LoginView({}),{withSidebar:false});
         },
 
         index: function() {
@@ -59,14 +49,14 @@ define([
             this.showHeader();
             this.showSearchBar();
 
-            this.show(new IndexView({}), {
+            this.show(new OperationSystem.Views.IndexView({}), {
                 requiresAuth: true
             });
 
         },
         showHeader: function() {
             if (!this.headerView) {
-                this.headerView = new HeaderView({});
+                this.headerView = new OperationSystem.Views.HeaderView({});
                 $('#header').html(this.headerView.render().el);
 
             }
@@ -74,7 +64,7 @@ define([
         showSearchBar: function() {
 
             if (!this.communitySearchView) {
-                this.communitySearchView =new CommunitySearchView({}); 
+                this.communitySearchView =new OperationSystem.Views.communitySearch.CommunitySearchView({}); 
                 $('#side_bar').html( this.communitySearchView.render().el);
                  this.communitySearchView.populate();
 
@@ -110,7 +100,7 @@ define([
             if (typeof options !== 'undefined' && options.requiresAuth) {
 
                 var self = this;
-                app.session.checkAuth({
+                OperationSystem.app.session.checkAuth({
                     success: function(res) {
                         // If auth successful, render inside the page wrapper
                         // $('#content').html(self.currentView.render().$el);
@@ -138,5 +128,6 @@ define([
 
     });
 
-    return IndexRouter;
-});
+
+})(); 
+

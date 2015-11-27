@@ -1,14 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function($, _, Backbone, JST) {
+(function(){
     'use strict';
-
-    var SortServiceView = Backbone.View.extend({
+    OperationSystem.Views.communityDetails.SortServiceView = Backbone.View.extend({
         template: JST['app/scripts/templates/communityDetails/sortService.ejs'],
 
         tagName: 'li',
@@ -123,5 +119,6 @@ define([
         }
     });
 
-    return SortServiceView;
-});
+
+})();
+

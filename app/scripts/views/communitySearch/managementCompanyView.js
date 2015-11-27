@@ -1,14 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function ($, _, Backbone, JST) {
+(function(){
     'use strict';
-
-    var ManagementCompanyView = Backbone.View.extend({
+    OperationSystem.Views.communitySearch.ManagementCompanyView = Backbone.View.extend({
         tagName: 'option',
 
         className: '',
@@ -29,5 +25,5 @@ define([
         }
     });
 
-    return ManagementCompanyView;
-});
+
+})();

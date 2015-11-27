@@ -1,14 +1,11 @@
 /*global define*/
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-], function ($, _, Backbone, JST) {
-    'use strict';
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-    var CommunityHeaderView = Backbone.View.extend({
+(function(){
+'use strict';
+OperationSystem.Views.communityDetails.CommunityHeaderView = Backbone.View.extend({
         template: JST['app/scripts/templates/communityDetails/communityHeader.ejs'],
 
         className: 'col-md-12',
@@ -28,5 +25,6 @@ define([
         }
     });
 
-    return CommunityHeaderView;
-});
+})();
+
+

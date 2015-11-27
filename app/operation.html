@@ -1,0 +1,122 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <title>BackGeneratorRequire</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{csrfToken}}">
+
+        <link rel="stylesheet" href="styles/bootstrap.css">
+        
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+        <!-- build:js scripts/vendor/modernizr.js -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+        <!-- endbuild -->
+
+
+
+    </head>
+    <body>
+        <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div id="header" class="clearfix">
+        </div>
+        
+        <div class="context-area withSidebar" id="content">
+        </div>
+        <div id="side_bar"></div>
+
+
+        <!-- build:js scripts/vendor.js -->
+        <script src="bower_components/jquery/jquery.js"></script>
+        <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+        <script src="bower_components/backbone/backbone.js"></script>
+        <script src="bower_components/backbone-validation/dist/backbone-validation.js"></script>
+        <script src="bower_components/backgrid/lib/backgrid.js"></script>
+        <script src="bower_components/js-cookie/src/js.cookie.js"></script>
+        <script src="bower_components/parsleyjs/dist/parsley.js"></script>
+        
+        <!-- endbuild -->
+        
+        <!-- build:js scripts/plugins.js -->
+
+        <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap_back/dropdown.js"></script>
+
+        <!-- endbuild -->
+
+
+
+
+
+          <!-- build:js({.tmp,app}) scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <script src="scripts/app.js"></script>
+        <script src="scripts/templates.js"></script>
+        <script src="scripts/models/SessionModel.js"></script>
+        <script src="scripts/models/UserModel.js"></script>
+
+        <script src="scripts/models/communityDetails/mcompanyModel.js"></script>
+        <script src="scripts/models/communityDetails/privateServiceModel.js"></script>
+        <script src="scripts/models/communityDetails/publicServiceModel.js"></script>
+
+        <script src="scripts/models/communitySearch/cityModel.js"></script>
+        <script src="scripts/models/communitySearch/communityModel.js"></script>
+        <script src="scripts/models/communitySearch/countryModel.js"></script>
+        <script src="scripts/models/communitySearch/districtModel.js"></script>
+        <script src="scripts/models/communitySearch/managementCompanyModel.js"></script>
+        <script src="scripts/models/communitySearch/managementStaffModel.js"></script>
+        <script src="scripts/models/communitySearch/provinceModel.js"></script>
+
+
+        <script src="scripts/collections/communityDetails/privateServiceCollection.js"></script>
+        <script src="scripts/collections/communityDetails/publicServiceCollection.js"></script>
+        <script src="scripts/collections/communitySearch/cityCollection.js"></script>
+        <script src="scripts/collections/communitySearch/communityCollection.js"></script>
+        <script src="scripts/collections/communitySearch/countryCollection.js"></script>
+        <script src="scripts/collections/communitySearch/districtCollection.js"></script>
+        <script src="scripts/collections/communitySearch/managementCompanyCollection.js"></script>
+        <script src="scripts/collections/communitySearch/managementStaffCollection.js"></script>
+        <script src="scripts/collections/communitySearch/provinceCollection.js"></script>
+        
+        <script src="scripts/routes/indexRouter.js"></script>
+        
+        <script src="scripts//views/headerView.js"></script>    
+        <script src="scripts//views/indexView.js"></script>    
+        <script src="scripts//views/loginView.js"></script>    
+        <script src="scripts//views/modalDialogView.js"></script>    
+        <script src="scripts//views/communityDetails/communityDetailsView.js"></script>    
+        <script src="scripts//views/communityDetails/communityHeaderView.js"></script>    
+        <script src="scripts//views/communityDetails/createPrivateServiceView.js"></script>    
+        <script src="scripts//views/communityDetails/editPrivateServiceView.js"></script>    
+        <script src="scripts//views/communityDetails/privateServicesView.js"></script>    
+        <script src="scripts//views/communityDetails/privateServiceView.js"></script>    
+        <script src="scripts//views/communityDetails/publicServicesView.js"></script>    
+        <script src="scripts//views/communityDetails/publicServiceView.js"></script>    
+        <script src="scripts//views/communityDetails/sortServicesView.js"></script>    
+        <script src="scripts//views/communityDetails/sortServiceView.js"></script>    
+        <script src="scripts//views/communitySearch/communitySearchView.js"></script>    
+        <script src="scripts//views/communitySearch/communityView.js"></script>    
+        <script src="scripts//views/communitySearch/createCommunityView.js"></script>    
+        <script src="scripts//views/communitySearch/locationsView.js"></script>    
+        <script src="scripts//views/communitySearch/locationView.js"></script>    
+        <script src="scripts//views/communitySearch/managementCompaniesView.js"></script>    
+        <script src="scripts//views/communitySearch/managementCompanyView.js"></script>    
+        <script src="scripts//views/communitySearch/managementStaffsView.js"></script>    
+        <script src="scripts//views/communitySearch/managementStaffView.js"></script>    
+        <script src="scripts//views/communitySearch/searchResultsView.js"></script>    
+        <script src="scripts//views/communitySearch/searchResultView.js"></script>    
+        <script src="scripts//views/o2oServices/createO2oServiceView.js"></script>    
+        <script src="scripts//views/o2oServices/editO2oServiceView.js"></script>    
+        <script src="scripts//views/o2oServices/listCommunitiesView.js"></script>    
+        <script src="scripts//views/o2oServices/o2oServiceDetailsView.js"></script>    
+        <script src="scripts//views/o2oServices/o2oServicesView.js"></script>    
+        <script src="scripts//views/o2oServices/o2oServiceView.js"></script>    
+ 
+        <!-- endbuild -->
+    </body>
+</html>

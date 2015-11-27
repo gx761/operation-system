@@ -1,16 +1,11 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/communityDetails/sortServiceView'
-
-], function($, _, Backbone, JST, SortServiceView) {
+(function(){
     'use strict';
 
-    var SortServicesView = Backbone.ModalView.extend({
+    OperationSystem.Views.communityDetails.SortServicesView = Backbone.ModalView.extend({
         template: JST['app/scripts/templates/communityDetails/sortServices.ejs'],
 
         events: {
@@ -73,7 +68,7 @@ define([
         },
         addOne: function(sortService) {
 
-            var sortServiceView = new SortServiceView({
+            var sortServiceView = new OperationSystem.Views.communityDetails.SortServiceView({
                 model: sortService,
                 overClass: 'over',
                 parent: this
@@ -101,5 +96,5 @@ define([
         },
     });
 
-    return SortServicesView;
-});
+})();
+

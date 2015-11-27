@@ -1,8 +1,9 @@
-define(["jquery",
-    "underscore",
-    "backbone"
-], function($, _, Backbone) {
-    var app = {
+
+OperationSystem.app={};
+(function(){
+    'use strict';
+
+    OperationSystem.app =  {
         root: "/",
         URL: "/",
         API: "",
@@ -15,7 +16,6 @@ define(["jquery",
                 $("#header-alert").hide();
             }, 7000);
         }
-
     };
 
     Backbone.View.prototype.close = function() {
@@ -29,7 +29,7 @@ define(["jquery",
     };
 
 
+})();
 
-    return app;
 
-});
+

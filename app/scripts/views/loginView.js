@@ -1,15 +1,9 @@
 /*global define*/
+OperationSystem.Views =OperationSystem.Views||{};
 
-define([
-    'app',
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'parsley'
-    ], function (app, $, _, Backbone, JST) {
+(function(){
     'use strict';
-    var LoginView = Backbone.View.extend({
+    OperationSystem.Views.LoginView = Backbone.View.extend({
         template: JST['app/scripts/templates/login.ejs'],
 
         tagName: 'div',
@@ -38,20 +32,20 @@ define([
             if (evt) evt.preventDefault();
 
             if (this.$("#login-form").parsley().validate()) {
-                app.session.login({
+                OperationSystem.app.session.login({
                     email: this.$("#login-email-input").val(),
                     password: this.$("#login-password-input").val()
                 }, {
                     success: function (res) {
                        console.log("SUCCESS",res);
 
-                       app.router.navigate("/", {trigger: true,replace: true});
+                       OperationSystem.app.router.navigate("/", {trigger: true,replace: true});
 
 
                     },
                     error: function (err) {
                         console.log("ERROR", err);
-                        app.showAlert('Bummer dude!', err.responseJSON.message, 'alert-danger');
+                        OperationSystem.app.showAlert('Bummer dude!', err.responseJSON.message, 'alert-danger');
                     }
                 });
             } else {
@@ -63,18 +57,18 @@ define([
 
         initialize: function () {
             _.bindAll(this);
-            app.session.on("change:logged_in", this.render);
+            OperationSystem.app.session.on("change:logged_in", this.render);
         },
 
         render: function () {
-      //      if(app.session.get('logged_in')) this.template = JST['app/scripts/templates/login.ejs'];
+      //      if(OperationSystem.app.session.get('logged_in')) this.template = JST['OperationSystem.app/scripts/templates/login.ejs'];
             this.$el.html(this.template({
-                user: app.session.user.toJSON()
+                user: OperationSystem.app.session.user.toJSON()
             }));
             return this;
 
         }
     });
 
-    return LoginView;
-});
+
+} )();

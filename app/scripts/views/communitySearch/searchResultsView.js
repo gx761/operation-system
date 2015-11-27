@@ -1,16 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/communitySearch/searchResultView'
-
-], function ($, _, Backbone, JST,SearchResultView) {
+(function(){
     'use strict';
-
-    var SearchResultsView = Backbone.View.extend({
+    OperationSystem.Views.communitySearch.SearchResultsView = Backbone.View.extend({
 
 
         initialize: function () {
@@ -23,7 +17,7 @@ define([
             this.$el.html(this.template(this.model.toJSON()));
         },
         addOne: function (community) {
-            var searchResultView = new SearchResultView({model: community});
+            var searchResultView = new OperationSystem.Views.communitySearch.SearchResultView({model: community});
             this.searchResultsView.push(searchResultView);
 
             $(this.el).append(
@@ -39,5 +33,6 @@ define([
         }
     });
 
-    return SearchResultsView;
-});
+})();
+
+

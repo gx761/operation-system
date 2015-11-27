@@ -1,14 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.o2oServices = OperationSystem.Views.o2oServices ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function($, _, Backbone, JST) {
+(function(){
     'use strict';
-
-    var EditO2oServiceView = Backbone.View.extend({
+    OperationSystem.Views.o2oServices.EditO2oServiceView = Backbone.View.extend({
         template: JST['app/scripts/templates/o2oServices/editO2oService.ejs'],
 
 
@@ -128,6 +124,5 @@ define([
 
 
     });
+})();
 
-    return EditO2oServiceView;
-});

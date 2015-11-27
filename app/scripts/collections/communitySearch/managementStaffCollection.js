@@ -1,15 +1,14 @@
 /*global define*/
+OperationSystem.Collections=OperationSystem.Collections||{};
+OperationSystem.Collections.communitySearch=OperationSystem.Collections.communitySearch||{};
 
-define([
-    'underscore',
-    'backbone',
-    'models/communitySearch/managementStaffModel'
-], function (_, Backbone, ManagementStaffModel) {
-    'use strict';
-
-    var ManagementStaffCollection = Backbone.Collection.extend({
-        model: ManagementStaffModel
+(function(){
+'use strict';
+OperationSystem.Collections.communitySearch.ManagementStaffCollection = Backbone.Collection.extend({
+        model: OperationSystem.Models.communitySearch.ManagementStaffModel
     });
 
-    return ManagementStaffCollection;
-});
+
+})();
+
+

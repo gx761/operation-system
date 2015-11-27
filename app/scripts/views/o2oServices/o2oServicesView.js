@@ -1,18 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.o2oServices = OperationSystem.Views.o2oServices ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'collections/communityDetails/publicServiceCollection',
-    'models/communityDetails/publicServiceModel',
-    'views/o2oServices/o2oServiceView',
-    'views/o2oServices/createO2oServiceView'
-], function($, _, Backbone, JST, PublicServiceCollection, PublicServiceModel,O2oServiceView,CreateO2oServiceView) {
+(function(){
     'use strict';
-
-    var O2oServicesView = Backbone.View.extend({
+    OperationSystem.Views.o2oServices.O2oServicesView = Backbone.View.extend({
         template: JST['app/scripts/templates/o2oServices/o2oServices.ejs'],
 
 
@@ -26,7 +18,7 @@ define([
 
         initialize: function() {
 
-            this.collection = new PublicServiceCollection({});
+            this.collection = new OperationSystem.Collections.communityDetails.PublicServiceCollection({});
 
             this.collection.url = '/api/services/o2oServices/';
 
@@ -45,10 +37,10 @@ define([
         },
         addService:function(e){
             e.preventDefault();
-            var createO2oServiceModel = new PublicServiceModel({});
+            var createO2oServiceModel = new OperationSystem.Models.communityDetails.PublicServiceModel({});
 
 
-            var view = new CreateO2oServiceView({
+            var view = new OperationSystem.Views.o2oServices.CreateO2oServiceView({
                 model:createO2oServiceModel,
                 collection:this.collection
             });
@@ -58,7 +50,7 @@ define([
         addOne: function(o2oService) {
 
  
-            var o2oServiceView = new O2oServiceView({
+            var o2oServiceView = new OperationSystem.Views.o2oServices.O2oServiceView({
                 model: o2oService,
             });
 
@@ -90,6 +82,5 @@ define([
             return this;
         }
     });
+})();
 
-    return O2oServicesView;
-});

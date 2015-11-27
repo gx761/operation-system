@@ -1,23 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/communityDetails/communityHeaderView',
-    'views/communityDetails/sortServicesView',
-    'models/communityDetails/mcompanyModel',
-    'collections/communityDetails/privateServiceCollection',
-    'collections/communityDetails/publicServiceCollection',
-
-    'views/communityDetails/privateServicesView',
-    'views/communityDetails/publicServicesView',
-
-], function($, _, Backbone, JST, CommunityHeaderView, SortServicesView, McompanyModel, PrivateServiceCollection, PublicServiceCollection, PrivateServicesView, PublicServicesView) {
-    'use strict';
-
-    var CommunityDetailsView = Backbone.View.extend({
+(function(){
+'use strict';
+OperationSystem.Views.communityDetails.CommunityDetailsView= Backbone.View.extend({
         template: JST['app/scripts/templates/communityDetails/communityDetails.ejs'],
 
         id: '',
@@ -45,7 +32,7 @@ define([
 
             serviceCollection.set(serviceArray);
 
-            var sortServicesView = new SortServicesView({
+            var sortServicesView = new OperationSystem.Views.communityDetails.SortServicesView({
                 collection:serviceCollection
             });
 
@@ -59,11 +46,11 @@ define([
             var mcompanyModel,
                 commmunityHeader;
 
-            mcompanyModel = new McompanyModel({});
+            mcompanyModel = new OperationSystem.Models.communityDetails.McompanyModel({});
 
             mcompanyModel.set('communityId', this.communityId);
 
-            commmunityHeader = new CommunityHeaderView({
+            commmunityHeader = new OperationSystem.Views.communityDetails.CommunityHeaderView({
                 el: '#community_header',
                 model: mcompanyModel
             });
@@ -75,11 +62,11 @@ define([
             var privateServiceCollection,
                 privateServicesView;
 
-            this.privateServiceCollection = new PrivateServiceCollection({});
+            this.privateServiceCollection = new OperationSystem.Collections.communityDetails.PrivateServiceCollection({});
 
             this.privateServiceCollection.url = '/api/services/privateServices/' + this.communityId;
 
-            privateServicesView = new PrivateServicesView({
+            privateServicesView = new OperationSystem.Views.communityDetails.PrivateServicesView({
                 el: '#private_services',
                 collection: this.privateServiceCollection,
                 communityId: this.communityId
@@ -93,10 +80,10 @@ define([
         populatePublicServices: function() {
             var publicServicesCollection,
                 publicServicesView;
-            this.publicServicesCollection = new PublicServiceCollection({});
+            this.publicServicesCollection = new OperationSystem.Collections.communityDetails.PublicServiceCollection({});
             this.publicServicesCollection.url = '/api/services/publicServices/' + this.communityId;
 
-            publicServicesView = new PublicServicesView({
+            publicServicesView = new OperationSystem.Views.communityDetails.PublicServicesView({
                 el:'#public_services',
                 collection:this.publicServicesCollection,
                 communityId:this.communityId
@@ -145,5 +132,6 @@ define([
         }
     });
 
-    return CommunityDetailsView;
-});
+})();
+
+

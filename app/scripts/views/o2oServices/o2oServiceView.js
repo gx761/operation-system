@@ -1,16 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.o2oServices = OperationSystem.Views.o2oServices ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'collections/communitySearch/communityCollection',
-    'views/o2oServices/o2oServiceDetailsView'
-], function($, _, Backbone, JST,CommunityCollection,O2oServiceDetailsView) {
+(function(){
     'use strict';
-
-    var O2oServiceView = Backbone.View.extend({
+    OperationSystem.Views.o2oServices.O2oServiceView = Backbone.View.extend({
         template: JST['app/scripts/templates/o2oServices/o2oService.ejs'],
 
         tagName: 'div',
@@ -88,7 +82,7 @@ define([
 
             e.preventDefault();
 
-            var view = new O2oServiceDetailsView({
+            var view = new OperationSystem.Views.o2oServices.O2oServiceDetailsView({
                 model:  this.model,
                 communityId:this.communityId
             });
@@ -112,5 +106,4 @@ define([
         }
     });
 
-    return O2oServiceView;
-});
+})();

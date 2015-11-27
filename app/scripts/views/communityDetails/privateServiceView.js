@@ -1,15 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communityDetails = OperationSystem.Views.communityDetails ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/communityDetails/editPrivateServiceView'
-], function($, _, Backbone, JST, EditPrivateServiceView) {
+(function(){
     'use strict';
-
-    var PrivateServiceView = Backbone.View.extend({
+    OperationSystem.Views.communityDetails.PrivateServiceView = Backbone.View.extend({
         template: JST['app/scripts/templates/communityDetails/privateService.ejs'],
 
         tagName: 'div',
@@ -32,7 +27,7 @@ define([
         },
         editPrivateServiceDetails: function(e) {
             e.preventDefault();
-            var editPrivateServiceView = new EditPrivateServiceView({
+            var editPrivateServiceView = new OperationSystem.Views.communityDetails.EditPrivateServiceView({
                 model: this.model
             });
             editPrivateServiceView.render().showModal();
@@ -97,5 +92,5 @@ define([
         }
     });
 
-    return PrivateServiceView;
-});
+
+})();

@@ -1,15 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/communitySearch/managementStaffView'
-], function ($, _, Backbone, JST,ManagementStaffView) {
+(function(){
     'use strict';
-
-    var ManagementStaffsView = Backbone.View.extend({
+    OperationSystem.Views.communitySearch.ManagementStaffsView = Backbone.View.extend({
 
         tagName:'select',
         className:'form-control',
@@ -23,7 +18,7 @@ define([
             this.collection.on('reset', this.addAll);
         },
         addOne: function (location) {
-            var managementStaffView = new ManagementStaffView({model: location});
+            var managementStaffView = new OperationSystem.Views.communitySearch.ManagementStaffView({model: location});
             this.managementStaffViews.push(managementStaffView);
 
             $(this.el).append(
@@ -40,6 +35,5 @@ define([
 
 
     });
+})();
 
-    return ManagementStaffsView;
-});

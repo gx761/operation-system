@@ -1,14 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function ($, _, Backbone, JST) {
+(function(){
     'use strict';
-
-    var CommunityView = Backbone.View.extend({
+    OperationSystem.Views.communitySearch.CommunityView = Backbone.View.extend({
 
         template: JST['app/scripts/templates/communitySearch/community.ejs'],
 
@@ -35,6 +31,5 @@ define([
         
     });
 
-    return CommunityView;
 
-});
+})();

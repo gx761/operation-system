@@ -1,12 +1,10 @@
 /*global define*/
+OperationSystem.Models=OperationSystem.Models||{};
+OperationSystem.Models.communitySearch=OperationSystem.Models.communitySearch||{};
 
-define([
-    'underscore',
-    'backbone'
-], function (_, Backbone) {
+(function(){
     'use strict';
-
-    var ProvinceModel = Backbone.Model.extend({
+    OperationSystem.Models.communitySearch.ProvinceModel = Backbone.Model.extend({
 
         idAttribute:"areacode",
         initialize: function() {
@@ -26,5 +24,4 @@ define([
         }
     });
 
-    return ProvinceModel;
-});
+})();

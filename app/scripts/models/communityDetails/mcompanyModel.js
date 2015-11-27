@@ -1,12 +1,11 @@
 /*global define*/
 
-define([
-    'underscore',
-    'backbone'
-], function (_, Backbone) {
-    'use strict';
+OperationSystem.Models=OperationSystem.Models||{};
+OperationSystem.Models.communityDetails=OperationSystem.Models.communityDetails||{};
 
-    var McompanyModel = Backbone.Model.extend({
+(function(){
+'use strict';
+OperationSystem.Models.communityDetails.McompanyModel = Backbone.Model.extend({
 
         urlRoot: 'api/communities/mcompany',
 
@@ -32,5 +31,9 @@ define([
         }
     });
 
-    return McompanyModel;
-});
+
+
+
+})();
+
+

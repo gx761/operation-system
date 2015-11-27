@@ -1,16 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/communitySearch/locationView'
-], function ($, _, Backbone, JST, LocationView) {
-
+(function(){
     'use strict';
-
-    var LocationsView = Backbone.View.extend({
+    OperationSystem.Views.communitySearch.LocationsView = Backbone.View.extend({
 
         tagName:'select',
         className:'form-control',
@@ -25,7 +19,7 @@ define([
             this.collection.on('reset', this.addAll);
         },
         addOne: function (location) {
-            var locationView = new LocationView({model: location});
+            var locationView = new OperationSystem.Views.communitySearch.LocationView({model: location});
             this.locationViews.push(locationView);
 
             $(this.el).append(
@@ -82,5 +76,6 @@ define([
 
     });
 
-    return LocationsView;
-});
+})();
+
+

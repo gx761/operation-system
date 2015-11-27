@@ -1,12 +1,11 @@
 /*global define*/
 
-define([
-    'underscore',
-    'backbone'
-], function (_, Backbone) {
-    'use strict';
+OperationSystem.Models=OperationSystem.Models||{};
+OperationSystem.Models.communitySearch=OperationSystem.Models.communitySearch||{};
 
-    var CountryModel = Backbone.Model.extend({
+(function(){
+    'use strict';
+    OperationSystem.Models.communitySearch.CountryModel = Backbone.Model.extend({
         url: '',
 
         idAttribute:"areacode",
@@ -28,5 +27,7 @@ define([
         }
     });
 
-    return CountryModel;
-});
+
+
+})();
+

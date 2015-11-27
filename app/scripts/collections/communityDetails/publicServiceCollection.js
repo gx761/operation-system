@@ -1,15 +1,13 @@
 /*global define*/
+OperationSystem.Collections=OperationSystem.Collections||{};
+OperationSystem.Collections.communityDetails=OperationSystem.Collections.communityDetails||{};
 
-define([
-    'underscore',
-    'backbone',
-    'models/communityDetails/publicServiceModel'
-], function (_, Backbone, PublicServiceModel) {
-    'use strict';
+(function(){
+'use strict';
 
-    var PublicServiceCollection = Backbone.Collection.extend({
-        model: PublicServiceModel
+OperationSystem.Collections.communityDetails.PublicServiceCollection = Backbone.Collection.extend({
+        model: OperationSystem.Models.communityDetails.PublicServiceModel
     });
 
-    return PublicServiceCollection;
-});
+})();
+

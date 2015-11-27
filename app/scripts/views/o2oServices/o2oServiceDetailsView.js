@@ -1,17 +1,10 @@
 /*global define*/
+OperationSystem.Views = OperationSystem.Views ||{};
+OperationSystem.Views.o2oServices = OperationSystem.Views.o2oServices ||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/o2oServices/listCommunitiesView',
-    'views/o2oServices/editO2oServiceView',
-    'collections/communitySearch/communityCollection',
-], function($, _, Backbone, JST, ListCommunitiesView, EditO2oServiceView,CommunityCollection) {
+(function(){
     'use strict';
-
-    var O2oServiceDetailsView = Backbone.ModalView.extend({
+    OperationSystem.Views.o2oServices.O2oServiceDetailsView = Backbone.ModalView.extend({
         template: JST['app/scripts/templates/o2oServices/o2oServiceDetails.ejs'],
 
 
@@ -45,9 +38,9 @@ define([
         },
         populateCommunities: function() {
 
-            var communityCollection = new CommunityCollection({});
+            var communityCollection = new OperationSystem.Collections.communitySearch.CommunityCollection({});
             communityCollection.url = 'api/services/o2oServices/' + this.model.id + '/communities';
-            var listCommunitiesView = new ListCommunitiesView({
+            var listCommunitiesView = new OperationSystem.Views.o2oServices.ListCommunitiesView({
                 el: '#service_communities',
                 collection: communityCollection
             });
@@ -58,7 +51,7 @@ define([
         },
         populateService: function() {
 
-            var editO2oServiceView = new EditO2oServiceView({
+            var editO2oServiceView = new OperationSystem.Views.o2oServices.EditO2oServiceView({
                 el:'#edit_service',
                 model:this.model,
             });
@@ -80,6 +73,5 @@ define([
             return this;
         }
     });
+})();
 
-    return O2oServiceDetailsView;
-});

@@ -1,14 +1,9 @@
 /*global define*/
+OperationSystem.Views =OperationSystem.Views||{};
 
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates'
-], function ($, _, Backbone, JST) {
+(function(){
     'use strict';
-
-    var IndexView = Backbone.View.extend({
+    OperationSystem.Views.IndexView = Backbone.View.extend({
         template: JST['app/scripts/templates/index.ejs'],
 
         tagName: 'div',
@@ -30,5 +25,6 @@ define([
         }
     });
 
-    return IndexView;
-});
+
+} )();
+

@@ -11,7 +11,7 @@
   "generator-mocha": {},
   "generator-angular-fullstack": {
     "insertRoutes": true,
-    "registerRoutesFile": "server/routes.js",
+    "registerRoutesFile": "server/operation_routes.js",
     "routesNeedle": "// Insert routes below",
     "routesBase": "/api/",
     "pluralizeRoutes": true,

@@ -1,19 +1,16 @@
 /*global define*/
 
-define([
-    'app',
-    'models/UserModel',
-    'js-cookie'
-], function(app, UserModel, Cookies) {
-    'use strict';
+OperationSystem.Models =OperationSystem.Models||{};
 
-    var SessionModel = Backbone.Model.extend({
+(function(){
+'use strict';
+OperationSystem.Models.SessionModel = Backbone.Model.extend({
         url: function() {
-            return app.API + 'auth/local';
+            return OperationSystem.app.API + 'auth/local';
         },
 
         initialize: function() {
-            this.user = new UserModel({});
+            this.user = new OperationSystem.Models.UserModel({});
         },
 
         defaults: {
@@ -78,38 +75,6 @@ define([
             });
 
 
-
-        /*    var self = this;
-            this.fetch({
-                    success: function(mod, res) {
-                        if (!res.error && res.user) {
-                            self.updateSessionUser(res.user);
-                            self.set({
-                                logged_in: true
-                            });
-                            if ('success' in callback)
-                                callback.success(mod, res);
-                        } else {
-                            self.set({
-                                logged_in: false
-                            });
-                            if ('error' in callback)
-                                callback(mod, res);
-                        }
-                    },
-                    error: function(mod, res) {
-                        self.set({
-                            logged_in: false
-                        });
-                        if ('error' in callback)
-                            callback.error(mod, res);
-                    }
-                })
-                .complete(function() {
-                    if ('complete' in callback)
-                        callback.complete();
-                });
-*/
         },
 
         postAuth: function(options, callback, args) {
@@ -183,5 +148,7 @@ define([
 
     });
 
-    return SessionModel;
-});
+
+})();
+
+

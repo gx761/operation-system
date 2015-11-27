@@ -224,7 +224,8 @@ exports.showO2oServiceCommunties = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
-    connection.query('  select t1.community_id,t2.communityname,t6.name as provincename,t4.name as cityname,t3.name as districtname from '+config.dbOptions.prefix+'_'+'community_public_service as t1 left join '+config.dbOptions.prefix+'_'+'dic_community as t2 inner join dic_areacode as t3 on t2.areacode=t3.areacode inner join dic_areacode as t4 on t2.citycode=t4.areacode inner join dic_areacode as t5 on t2.citycode=t5.areacode inner join dic_areacode as t6 on t6.areacode=t5.hihercode on t1.community_id=t2.communitycode where ?', {
+  
+    connection.query('  select t1.community_id,t2.communityname,t6.name as provincename,t4.name as cityname,t3.name as districtname from '+config.dbOptions.prefix+'_'+'community_public_service as t1 left join dic_community as t2 inner join dic_areacode as t3 on t2.areacode=t3.areacode inner join dic_areacode as t4 on t2.citycode=t4.areacode inner join dic_areacode as t5 on t2.citycode=t5.areacode inner join dic_areacode as t6 on t6.areacode=t5.hihercode on t1.community_id=t2.communitycode where ?', {
       't1.public_service_id': public_service_id
     }, function(err, results) {
       if (err) {
