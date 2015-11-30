@@ -6,7 +6,7 @@
     "testFramework": "mocha",
     "templateFramework": "lodash",
     "sassBootstrap": true,
-    "includeRequireJS": true
+    "includeRequireJS": false
   },
   "generator-mocha": {},
   "generator-angular-fullstack": {

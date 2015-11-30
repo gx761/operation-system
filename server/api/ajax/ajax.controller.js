@@ -1,10 +1,10 @@
 'use strict';
 
 var _ = require('lodash');
-var Ajax = require('./ajax.model');
 var mysql = require('mysql');
 var moment =require('moment');
 var config = require('../../config/environment');
+var User = require('./managementUser.model');
 
 
 function mysqlLog(sql,inserts){
@@ -16,8 +16,6 @@ function handleError(res, err) {
     return res.status(500).send(err);
 }
 exports.getCountries = function(req,res){
-
-    console.log(config.dbOptions.prefix);
 
     req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
@@ -62,7 +60,7 @@ exports.getDistricts = function(req,res){
 exports.getManagementCompanies = function(req,res){
     req.getConnection(function(err, connection) {
         if(err) { return handleError(res, err); }
-        connection.query('select id,name from '+config.dbOptions.prefix+'_'+'management_company', function(err, results) {
+        connection.query('select id,name from yy_management_company', function(err, results) {
             if(err) { return handleError(res, err); }
             return res.status(200).json(results);
         });
@@ -70,11 +68,18 @@ exports.getManagementCompanies = function(req,res){
 };
 
 exports.getManagementStaff = function(req,res){
-    req.getConnection(function(err, connection) {
+
+    User.find({companyId:req.params.company_id},'_id name',function(err,users){
         if(err) { return handleError(res, err); }
-        connection.query('select id,name from '+config.dbOptions.prefix+'_'+'management_staff where ? and role="admin"',{'company_id':req.params.company_id}, function(err, results) {
-            if(err) { return handleError(res, err); }
-            return res.status(200).json(results);
-        });
+        console.log(users);
+        return res.status(200).json(users);
     });
+
+    //req.getConnection(function(err, connection) {
+    //    if(err) { return handleError(res, err); }
+    //    connection.query('select id,name from yy_management_staff where ? and role="admin"',{'company_id':req.params.company_id}, function(err, results) {
+    //        if(err) { return handleError(res, err); }
+    //        return res.status(200).json(results);
+    //    });
+    //});
 };

@@ -19,7 +19,7 @@ OperationSystem.Views.communitySearch = OperationSystem.Views.communitySearch ||
         render: function () {
             //   console.log(this.model.get("areacode"));
 
-            $(this.el).attr('value',this.model.get('id')).html(this.model.get('name'));
+            $(this.el).attr('value',this.model.get('_id')).html(this.model.get('name'));
             //           console.log(this.el);
 
             return this;

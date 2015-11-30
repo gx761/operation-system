@@ -30,7 +30,7 @@ function findMaxOrder(req, res, community_id) {
       deferred.reject(err);
     }
 
-    connection.query('select MAX(t1.order) as `order`  from (select `order` from '+config.dbOptions.prefix+'_'+'private_service where ? union select `order` from '+config.dbOptions.prefix+'_'+'community_public_service where ? ) as t1', [{
+    connection.query('select MAX(t1.order) as `order`  from (select `order` from yy_private_service where ? union select `order` from yy_community_public_service where ? ) as t1', [{
       community_id: community_id,
     }, {
       community_id: community_id
@@ -60,7 +60,7 @@ function checkO2oServiceDeletable(req, res, id) {
       deferred.reject(err);
     }
 
-    connection.query('select count(*) as numberOfCommunities from '+config.dbOptions.prefix+'_'+'community_public_service where ?', {
+    connection.query('select count(*) as numberOfCommunities from yy_community_public_service where ?', {
       public_service_id: id
     }, function(err, results) {
       if (err) {
@@ -91,7 +91,7 @@ function updatePrivateServices(req, res, privateServices, callback) {
       (function updatePrivateServiceIn() {
 
         var privateService = privateServices.pop();
-        connection.query(' update '+config.dbOptions.prefix+'_'+'private_service set ? where ?', [{
+        connection.query(' update yy_private_service set ? where ?', [{
           'order': privateService.order
         }, {
           'id': privateService.id
@@ -135,7 +135,7 @@ function updatePublicServices(req, res, publicServices, callback) {
       (function updatePublicServiceIn() {
 
         var publicService = publicServices.pop();
-        connection.query(' update '+config.dbOptions.prefix+'_'+'community_public_service set ? where ? and ?', [{
+        connection.query(' update yy_community_public_service set ? where ? and ?', [{
           'order': publicService.order
         }, {
           'public_service_id': publicService.id,
@@ -178,7 +178,7 @@ exports.showAllServices = function(req,res){
     if (err) {
       return handleError(res, err);
     }
-    connection.query('select * from (select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile, t1.requester_name,t1.requester_mobile,t1.logo_url, case when t3.community_id is null then "inactive" else "active" end as status, t3.order from '+config.dbOptions.prefix+'_'+'public_service as t1 left join (select t1.id,t2.community_id,t2.order from '+config.dbOptions.prefix+'_'+'public_service as t1 inner join '+config.dbOptions.prefix+'_'+'community_public_service as t2 on t1.id=t2.public_service_id where ? ) as t3 on t1.id = t3.id where t1.status="active" and t3.community_id is not null   union select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from '+config.dbOptions.prefix+'_'+'private_service as t1 where ? and status="active" ) as t4  order by `order`', [{'t2.community_id':community_id},{'community_id':community_id}], function(err, results) {
+    connection.query('select * from (select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile, t1.requester_name,t1.requester_mobile,t1.logo_url, case when t3.community_id is null then "inactive" else "active" end as status, t3.order from yy_public_service as t1 left join (select t1.id,t2.community_id,t2.order from yy_public_service as t1 inner join yy_community_public_service as t2 on t1.id=t2.public_service_id where ? ) as t3 on t1.id = t3.id where t1.status="active" and t3.community_id is not null   union select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from yy_private_service as t1 where ? and status="active" ) as t4  order by `order`', [{'t2.community_id':community_id},{'community_id':community_id}], function(err, results) {
       if (err) {
         return handleError(res, err);
       }
@@ -225,7 +225,7 @@ exports.showO2oServiceCommunties = function(req, res) {
       return handleError(res, err);
     }
   
-    connection.query('  select t1.community_id,t2.communityname,t6.name as provincename,t4.name as cityname,t3.name as districtname from '+config.dbOptions.prefix+'_'+'community_public_service as t1 left join dic_community as t2 inner join dic_areacode as t3 on t2.areacode=t3.areacode inner join dic_areacode as t4 on t2.citycode=t4.areacode inner join dic_areacode as t5 on t2.citycode=t5.areacode inner join dic_areacode as t6 on t6.areacode=t5.hihercode on t1.community_id=t2.communitycode where ?', {
+    connection.query('  select t1.community_id,t2.communityname,t6.name as provincename,t4.name as cityname,t3.name as districtname from yy_community_public_service as t1 left join dic_community as t2 inner join dic_areacode as t3 on t2.areacode=t3.areacode inner join dic_areacode as t4 on t2.citycode=t4.areacode inner join dic_areacode as t5 on t2.citycode=t5.areacode inner join dic_areacode as t6 on t6.areacode=t5.hihercode on t1.community_id=t2.communitycode where ?', {
       't1.public_service_id': public_service_id
     }, function(err, results) {
       if (err) {
@@ -244,7 +244,7 @@ exports.showPublicServices = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
-    connection.query('select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile, t1.requester_name,t1.requester_mobile,t1.logo_url, case when t3.community_id is null then "inactive" else "active" end as status,t3.community_id,t3.order from '+config.dbOptions.prefix+'_'+'public_service as t1 left join (select t1.id,t2.community_id,t2.order from '+config.dbOptions.prefix+'_'+'public_service as t1 inner join '+config.dbOptions.prefix+'_'+'community_public_service as t2 on t1.id=t2.public_service_id where ? ) as t3 on t1.id = t3.id where t1.status="active"', {
+    connection.query('select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile, t1.requester_name,t1.requester_mobile,t1.logo_url, case when t3.community_id is null then "inactive" else "active" end as status,t3.community_id,t3.order from yy_public_service as t1 left join (select t1.id,t2.community_id,t2.order from yy_public_service as t1 inner join yy_community_public_service as t2 on t1.id=t2.public_service_id where ? ) as t3 on t1.id = t3.id where t1.status="active"', {
       't2.community_id': req.params.communityId
     }, function(err, results) {
       if (err) {
@@ -265,7 +265,7 @@ function returnPublicService(req, res, public_service_id, community_id) {
     }
 
 
-    connection.query('select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile, t1.requester_name,t1.requester_mobile,t1.logo_url, case when t3.community_id is null then "inactive" else "active" end as status, t3.community_id,t3.order from '+config.dbOptions.prefix+'_'+'public_service as t1 inner join (select t1.id,t2.community_id,t2.order from '+config.dbOptions.prefix+'_'+'public_service as t1 inner join '+config.dbOptions.prefix+'_'+'community_public_service as t2 on t1.id=t2.public_service_id where ? and ? ) as t3 on t1.id = t3.id where t1.status="active"', [{
+    connection.query('select t1.id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile, t1.requester_name,t1.requester_mobile,t1.logo_url, case when t3.community_id is null then "inactive" else "active" end as status, t3.community_id,t3.order from yy_public_service as t1 inner join (select t1.id,t2.community_id,t2.order from yy_public_service as t1 inner join yy_community_public_service as t2 on t1.id=t2.public_service_id where ? and ? ) as t3 on t1.id = t3.id where t1.status="active"', [{
       't2.community_id': community_id,
     }, {
       't2.public_service_id': public_service_id,
@@ -294,7 +294,7 @@ exports.updatePublicService = function(req, res) {
         return handleError(res, err);
       }
 
-      connection.query('delete from '+config.dbOptions.prefix+'_'+'community_public_service where ? and ?', [{
+      connection.query('delete from yy_community_public_service where ? and ?', [{
         'public_service_id': req.body.id,
       }, {
         'community_id': req.body.community_id
@@ -312,7 +312,7 @@ exports.updatePublicService = function(req, res) {
         return handleError(res, err);
       }
 
-      connection.query('select status from '+config.dbOptions.prefix+'_'+'public_service where ?', { //if trying to enable it, check if it is globally enabled.
+      connection.query('select status from yy_public_service where ?', { //if trying to enable it, check if it is globally enabled.
         id: req.body.id
       }, function(err, results) {
         if (err) {
@@ -325,7 +325,7 @@ exports.updatePublicService = function(req, res) {
 
         findMaxOrder(req, res, req.body.community_id).then(function(value) {
 
-          connection.query('insert into '+config.dbOptions.prefix+'_'+'community_public_service  set ?', {
+          connection.query('insert into yy_community_public_service  set ?', {
             'public_service_id': req.body.id,
             'community_id': req.body.community_id,
             'order': parseInt(value) + 1
@@ -360,7 +360,7 @@ exports.showPrivateServices = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
-    connection.query('select t1.id,t1.community_id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from '+config.dbOptions.prefix+'_'+'private_service as t1 where ?', {
+    connection.query('select t1.id,t1.community_id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from yy_private_service as t1 where ?', {
       'community_id': req.params.communityId
     }, function(err, results) {
       if (err) {
@@ -383,7 +383,7 @@ exports.showO2oServices = function(req, res) {
       return handleError(res, err);
     }
 
-    connection.query('select * from '+config.dbOptions.prefix+'_'+'public_service ',
+    connection.query('select * from yy_public_service ',
       function(err, results) {
         if (err) {
           return handleError(res, err);
@@ -442,13 +442,13 @@ exports.createPrivateService = function(req, res) {
                   return handleError(res, err);
                 }
                 console.log(postData);
-                connection.query('insert into '+config.dbOptions.prefix+'_'+'private_service set ?', postData, function(err, results) {
+                connection.query('insert into yy_private_service set ?', postData, function(err, results) {
                   if (err) {
                     return handleError(res, err);
                   }
                   if (results.insertId) {
 
-                    connection.query('select * from '+config.dbOptions.prefix+'_'+'private_service where ?', {
+                    connection.query('select * from yy_private_service where ?', {
                       id: results.insertId
                     }, function(err, results) {
                       if (err) {
@@ -516,13 +516,13 @@ exports.createO2oService = function(req, res) {
                 return handleError(res, err);
               }
 
-              connection.query('insert into '+config.dbOptions.prefix+'_'+'public_service set ?', postData, function(err, results) {
+              connection.query('insert into yy_public_service set ?', postData, function(err, results) {
                 if (err) {
                   return handleError(res, err);
                 }
                 if (results.insertId) {
 
-                  connection.query('select * from '+config.dbOptions.prefix+'_'+'public_service where ?', {
+                  connection.query('select * from yy_public_service where ?', {
                     id: results.insertId
                   }, function(err, results) {
                     if (err) {
@@ -559,7 +559,7 @@ function updatePrivateServiceDataAndReturn(req, res, data, id) {
         return handleError(res, err);
       }
 
-      connection.query('select * from '+config.dbOptions.prefix+'_'+'private_service where ?', {
+      connection.query('select * from yy_private_service where ?', {
         id: id
       }, function(err, results) {
         if (err) {
@@ -579,7 +579,7 @@ function deletePrivateServiceImage(req, res, id) {
       return handleError(res, err);
     }
 
-    connection.query('select logo_url from '+config.dbOptions.prefix+'_'+'private_service where ?', {
+    connection.query('select logo_url from yy_private_service where ?', {
       id: id
     }, function(err, results) {
       if (err) {
@@ -685,14 +685,14 @@ exports.togglePrivateService = function(req, res) {
       if (err) {
         return handleError(res, err);
       }
-      connection.query('update '+config.dbOptions.prefix+'_'+'private_service set ? where ?', [req.body, {
+      connection.query('update yy_private_service set ? where ?', [req.body, {
         'id': id
       }], function(err, results) {
         if (err) {
           return handleError(res, err);
         }
 
-        connection.query('select t1.id,t1.community_id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from '+config.dbOptions.prefix+'_'+'private_service as t1 where ?', {
+        connection.query('select t1.id,t1.community_id,t1.service_type_id,t1.name,t1.url,t1.note,t1.charger_name,t1.charger_mobile,t1.requester_name,t1.requester_mobile,t1.logo_url,t1.status,t1.order from yy_private_service as t1 where ?', {
             't1.id': id
           },
           function(err, results) {
@@ -725,7 +725,7 @@ exports.deletePrivateService = function(req, res) {
       return handleError(res, err);
     }
 
-    connection.query('select logo_url from '+config.dbOptions.prefix+'_'+'private_service where ?', {
+    connection.query('select logo_url from yy_private_service where ?', {
       id: serviceId
     }, function(err, results) {
       if (err) {
@@ -746,7 +746,7 @@ exports.deletePrivateService = function(req, res) {
         }
       });
 
-      connection.query('delete  from '+config.dbOptions.prefix+'_'+'private_service where ?', {
+      connection.query('delete  from yy_private_service where ?', {
         id: serviceId
       }, function(err, results) {
         if (err) {
@@ -768,7 +768,7 @@ function checkO2oServiceSuspendable(req, res, id) {
     if (err) {
       deferred.reject(err);
     }
-    connection.query('select count(*) as numberOfCommunities from '+config.dbOptions.prefix+'_'+'community_public_service where ? ', {
+    connection.query('select count(*) as numberOfCommunities from yy_community_public_service where ? ', {
       public_service_id: id
     }, function(err, results) {
       if (err) {
@@ -792,7 +792,7 @@ function updateO2oServiceData(req, res, data, id) {
     if (err) {
       return handleError(res, err);
     }
-    connection.query('update '+config.dbOptions.prefix+'_'+'public_service set ? where ?', [data, {
+    connection.query('update yy_public_service set ? where ?', [data, {
       'id': id
     }], function(err, results) {
       if (err) {
@@ -811,13 +811,13 @@ function updateO2oServiceDataAndReturn(req, res, data, id) {
       return handleError(res, err);
     }
 
-    connection.query('update '+config.dbOptions.prefix+'_'+'public_service set ?', data, function(err, results) {
+    connection.query('update yy_public_service set ?', data, function(err, results) {
       if (err) {
         return handleError(res, err);
       }
 
 
-      connection.query('select * from '+config.dbOptions.prefix+'_'+'public_service where ?', {
+      connection.query('select * from yy_public_service where ?', {
         id: id
       }, function(err, results) {
         if (err) {
@@ -837,7 +837,7 @@ function deleteO2oServiceImage(req, res, id) {
       return handleError(res, err);
     }
 
-    connection.query('select logo_url from '+config.dbOptions.prefix+'_'+'public_service where ?', {
+    connection.query('select logo_url from yy_public_service where ?', {
       id: id
     }, function(err, results) {
       if (err) {
@@ -969,7 +969,7 @@ exports.deleteO2oService = function(req, res) {
         return handleError(res, err);
       }
 
-      connection.query('select logo_url from '+config.dbOptions.prefix+'_'+'public_service where ?', {
+      connection.query('select logo_url from yy_public_service where ?', {
         id: serviceId
       }, function(err, results) {
         if (err) {
@@ -989,7 +989,7 @@ exports.deleteO2oService = function(req, res) {
           }
         });
 
-        connection.query('delete  from '+config.dbOptions.prefix+'_'+'public_service where ?', {
+        connection.query('delete  from yy_public_service where ?', {
           id: serviceId
         }, function(err, results) {
           if (err) {

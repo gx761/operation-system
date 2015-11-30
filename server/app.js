@@ -14,7 +14,7 @@ var mysql = require('mysql'), // node-mysql module
 	myConnection = require('express-myconnection');// express-myconnection module
 
 // Connect to database
-mongoose.connect(config.mongo.uri, config.mongo.options);
+mongoose.connect(config.db.mongo.uri, config.db.mongo.options);
 mongoose.connection.on('error', function(err) {
 	console.error('MongoDB connection error: ' + err);
 	process.exit(-1);
@@ -27,7 +27,7 @@ if (config.seedDB) {
 // Setup server
 var app = express();
 
-app.use( myConnection(mysql, config.dbOptions, 'pool') );
+app.use( myConnection(mysql, config.db.mysql, 'pool') );
 
 
 
@@ -39,7 +39,7 @@ var socketio = require('socket.io')(server, {
 });
 require('./config/socketio')(socketio);
 require('./config/express')(app);
-require('./operation_routes')(app);
+require('./routes/operation_routes')(app);
 
 // Start server
 server.listen(config.port, config.ip, function() {
